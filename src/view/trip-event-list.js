@@ -18,4 +18,4 @@ export default class TripEventList {
   removeElement() {
     this.element = null;
   }
-};
+}
