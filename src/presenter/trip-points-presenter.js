@@ -3,7 +3,7 @@ import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
 import {render} from '../render.js';
 
-export default class RenderTripPointsPresenter {
+export default class TripPointsPresenter {
   tripList = new TripEventList();
   editPoint = new EditPointView();
 
