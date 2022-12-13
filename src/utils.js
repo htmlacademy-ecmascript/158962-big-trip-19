@@ -1,13 +1,25 @@
 import dayjs from 'dayjs';
-import {DATE_FORMAT_DD_MM_YY, DATE_FORMAT_MMMM_D, TIME_FORMAT_HH_MM} from './const.js';
+
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-
-const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format(DATE_FORMAT_MMMM_D) : '';
-const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format(DATE_FORMAT_DD_MM_YY) : '';
-const formatTripDateTime = (tripTime) => tripTime ? dayjs(tripTime).format(TIME_FORMAT_HH_MM) : '';
+const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMMM D') : '';
+const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format('DD/MM/YY') : '';
+const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:MM') : '';
 const getOffersByType = (offers, point) => offers.find((offer) => offer.type === point.type);
-const getDescriptionByOfferType = (destinations, point) => destinations.find((destination) => destination.name === point.destination);
-const isPointFavorite = (value) => value;
+const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.id);
 
-export {getRandomArrayElement, randomIntFromInterval, formatTripDate, formatTripDayEditForm, formatTripDateTime, getOffersByType, getDescriptionByOfferType, isPointFavorite};
+const getRandomArrayLength = (elements) => {
+  const randomIndex = randomIntFromInterval(1, elements.length); // генерирую случайное число на которое будет отрезаться массив
+
+  return elements.slice(0, randomIndex);
+};
+
+export {getRandomArrayElement,
+  randomIntFromInterval,
+  formatTripDate,
+  formatTripDayEditForm,
+  formatTripTime,
+  getOffersByType,
+  getDescriptionByDestinationId,
+  getRandomArrayLength,
+};

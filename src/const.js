@@ -1,10 +1,8 @@
 const POINTS_COUNT = 5;
-const DATE_FORMAT_MMMM_D = 'MMMM D';
-const DATE_FORMAT_DD_MM_YY = 'DD/MM/YY';
-const TIME_FORMAT_HH_MM = 'HH:MM';
 const PRICES = [100, 120, 40, 80, 900, 1000, 70, 43, 35];
-//const DESTINATIONS = ['Geneva', 'Italy', 'Amsterdam', 'Prague', 'Egypt', 'Thailand', 'Spain', 'Moscow', 'Turkey', 'Paris'];
+const DESTINATIONS = ['Geneva', 'Italy', 'Amsterdam', 'Prague', 'Ulm', 'Thailand', 'Spain', 'Moscow', 'Turkey', 'Paris'];
 //const OFFER_TITLES = ['Switch to comfort class', 'Add luggage', 'Add meal', 'Choose seats', 'Travel by train'];
-//const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.'];
 
-export {POINTS_COUNT, PRICES, DATE_FORMAT_DD_MM_YY, DATE_FORMAT_MMMM_D, TIME_FORMAT_HH_MM};
+export {POINTS_COUNT, TYPES, DESTINATIONS, DESCRIPTIONS, PRICES};

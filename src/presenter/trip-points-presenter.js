@@ -13,13 +13,21 @@ export default class TripPointsPresenter {
 
   init() {
     this.tripPoints = [...this.pointsModel.getPoints()];
-    this.offersByPointType = [...this.pointsModel.getOffersByPointType()];
-    const editPoint = new EditPointView({point: this.tripPoints[0], offersByPointType: this.offersByPointType});
+    this.offersByPointType = this.pointsModel.getOffersByPointType();
+    this.destinationsByPointType = this.pointsModel.getDestinations();
+    const editPoint = new EditPointView({
+      point: this.tripPoints[0],
+      offersByPointType: this.offersByPointType,
+      destinationsByPointType:this.destinationsByPointType,
+    });
+
     render(this.tripList, this.eventContainer);
     render(editPoint, this.tripList.getElement());
 
-    for (let i = 0; i < this.tripPoints.length; i++) {
-      render(new TripItemView({point: this.tripPoints[i], offersByPointType: this.offersByPointType}), this.tripList.getElement());
-    }
+    this.tripPoints.forEach((tripPoint) => render(new TripItemView({
+      point: tripPoint,
+      offersByPointType: this.offersByPointType,
+      destinationsByPointType:this.destinationsByPointType,
+    }), this.tripList.getElement()));
   }
 }

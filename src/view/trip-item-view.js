@@ -1,17 +1,16 @@
 import {createElement} from '../render.js';
-import {formatTripDate, formatTripDateTime, isPointFavorite, getOffersByType, randomIntFromInterval} from '../utils';
+import {formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId} from '../utils';
 
-const createTripItemTemplate = (point, offersByPointType) => {
-  const { destination, dateFrom, dateTo, type, price, isFavorite } = point;
-  //console.log(point)
-  const activeFavoriteClassName = isPointFavorite(isFavorite)
-    ? 'event__favorite-btn--active'
-    : '';
+const createTripItemTemplate = (point, offersByPointType, destinationsByPointType) => {
+  const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers} = point;
+  const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
   const tripDate = formatTripDate(dateFrom);
-  const tripTimeFrom = formatTripDateTime(dateFrom);
-  const tripTimeTo = formatTripDateTime(dateTo);
-  const tripItemOffer = getOffersByType(offersByPointType, point);
-  const { offers } = tripItemOffer;
+  const tripTimeTo = formatTripTime(dateTo);
+  const tripTimeFrom = formatTripTime(dateFrom);
+  const { offers } = getOffersByType(offersByPointType, point); // все офферы для конкретной точки маршрута
+  const offersForRender = offers.filter(({id}) => pointOffers.includes(id));
+  const { name } = getDescriptionByDestinationId(destinationsByPointType, point);
+
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -19,21 +18,21 @@ const createTripItemTemplate = (point, offersByPointType) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destination}</h3>
+        <h3 class="event__title">${type} ${name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="2019-03-18T10:30">${tripTimeFrom}</time>
             &mdash;
             <time class="event__end-time" datetime="2019-03-18T11:00">${tripTimeTo}</time>
           </p>
-          <p class="event__duration">30M</p> <!--тут пока не срослось( -->
+          <p class="event__duration">30M</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offers.slice(0, randomIntFromInterval(0, offers.length)).map(({ title, price: offerPrice }) => `<li class="event__offer">
+          ${offersForRender.map(({ title, price: offerPrice }) => `<li class="event__offer">
             <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offerPrice}</span>
@@ -53,13 +52,14 @@ const createTripItemTemplate = (point, offersByPointType) => {
 };
 
 export default class TripItemView {
-  constructor({point, offersByPointType}) {
+  constructor({point, offersByPointType, destinationsByPointType}) {
     this.point = point;
     this.offersByPointType = offersByPointType;
+    this.destinationsByPointType = destinationsByPointType;
   }
 
   getTemplate() {
-    return createTripItemTemplate(this.point, this.offersByPointType);
+    return createTripItemTemplate(this.point, this.offersByPointType, this.destinationsByPointType);
   }
 
   getElement() {
