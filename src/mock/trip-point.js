@@ -1,4 +1,4 @@
-import {getRandomArrayElement, randomIntFromInterval, getRandomArrayLength, getOffersByType} from '../utils.js';
+import {getRandomArrayElement, randomIntFromInterval} from '../utils.js';
 import {PRICES, TYPES, DESTINATIONS, DESCRIPTIONS} from '../const';
 import dayjs from 'dayjs';
 
@@ -294,9 +294,8 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [3, 5],
-    //some: function(){return tripPoints.type;},
   },
 
   {
@@ -306,7 +305,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2, 3],
   },
 
@@ -317,7 +316,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2, 3],
   },
 
@@ -328,7 +327,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [2, 3, 4],
   },
 
@@ -339,7 +338,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2],
   },
 
@@ -350,7 +349,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [2, 3, 4],
   },
 
@@ -361,7 +360,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2, 3],
   },
 
@@ -372,7 +371,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2, 3],
   },
 
@@ -383,7 +382,7 @@ const tripPoints = [
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
     dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs(),
+    dateTo: dayjs().add(2, 'h'),
     offers: [1, 2, 4],
   },
 ];
@@ -395,7 +394,7 @@ const destinations = [
     name:  getRandomArrayElement(DESTINATIONS),
     pictures: [
       {
-        src: `http://picsum.photos/300/200?r=${getRandomArrayElement([1, 2, 5, 7])}`,
+        src: `http://picsum.photos/300/200?r=${getRandomArrayElement([1, 2, 5, 7, 10, 13])}`,
         description: 'Something description.',
       }
     ]
@@ -406,7 +405,7 @@ const destinations = [
     name:  getRandomArrayElement(DESTINATIONS),
     pictures: [
       {
-        src: `http://picsum.photos/300/200?r=${getRandomArrayElement([1, 2, 5, 7])}`,
+        src: `http://picsum.photos/300/200?r=${getRandomArrayElement([1, 2, 5, 7, 11, 12])}`,
         description: 'Something description',
       }
     ]
@@ -496,7 +495,6 @@ const destinations = [
     ]
   },
 ];
-
 
 // функция обертка, возвращает случайную точку маршрута
 const getRandomTripPoint = () => getRandomArrayElement(tripPoints);

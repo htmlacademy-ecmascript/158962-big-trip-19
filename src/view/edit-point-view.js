@@ -3,24 +3,84 @@ import {formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionBy
 import {TYPES} from '../const';
 
 const NEW_TRIP_POINT = {
-  'id': 1,
-  'type': '',
-  'destination': '',
-  'isFavorite': false,
-  'price': '',
-  'dateFrom': '2019-05-10T22:55:56.845Z',
-  'dateTo': '2019-07-11T11:22:13.375Z',
-  'offers': [],
+  id: 1,
+  type: '',
+  destination: '',
+  isFavorite: false,
+  price: '',
+  dateFrom: '2019-05-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  offers: [],
 };
 
-const createEditPointTemplate = (point, offersByPointType, destinationsByPointType) => {
+const createOffersTemplate = (offers, pointOffers) => {
+
+  if (offers?.length === 0) {
+
+    return '';
+  }
+
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+      ${offers.map(({ title: availableOfferTitle, price: availableOfferPrice, id }) => {
+      const checkedOffer = pointOffers.includes(id) ? 'checked' : '';
+
+      return (
+        `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden"
+               id="event-offer-luggage-${id}"
+               type="checkbox"
+               name="event-offer-luggage" ${checkedOffer}>
+          <label class="event__offer-label" for="event-offer-luggage-${id}">
+            <span class="event__offer-title">${availableOfferTitle}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${availableOfferPrice}</span>
+          </label>
+        </div>`);}).join('')}
+       </div>
+      </section>`
+  );
+};
+
+const createDestinationTemplate = (destinations, description) => {
+
+  if (destinations?.length === 0) {
+
+    return '';
+  }
+
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${description}</p>
+
+      <div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${destinations.map(({pictures: pictureForDescription}) => {
+      const [picture] = pictureForDescription;
+
+      return `<img class="event__photo" src="${picture.src}.jpg" alt="Event photo">`;
+    }).join('')}
+
+        </div>
+       </div>
+      </section>
+  `);
+};
+
+const createEditPointTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, offers: pointOffers} = point;
   const tripDateFrom = formatTripDayEditForm(dateFrom);
   const tripDateTo = formatTripDayEditForm(dateTo);
   const tripTimeFrom = formatTripTime(dateFrom);
   const tripTimeTo = formatTripTime(dateTo);
-  const { offers } = getOffersByType(offersByPointType, point);
-  const { description, name } = getDescriptionByDestinationId(destinationsByPointType, point);
+  const offersByType = getOffersByType(offers, point)?. offers;
+  const { description, name } = getDescriptionByDestinationId(destinations, point);
+  const offersTemplate = createOffersTemplate(offersByType, pointOffers);
+  const destinationsTemplate = createDestinationTemplate(destinations, description, point);
 
   return (
     `<li class="trip-events__item">
@@ -92,38 +152,8 @@ const createEditPointTemplate = (point, offersByPointType, destinationsByPointTy
         </button>
       </header>
       <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-        ${offers.map(({ title: availableOfferTitle, price: availableOfferPrice, id }) => {
-        const checkedOffer = pointOffers.includes(id) ? 'checked' : '';
-        return (
-          `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${checkedOffer}>
-            <label class="event__offer-label" for="event-offer-luggage-${id}">
-              <span class="event__offer-title">${availableOfferTitle}</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">${availableOfferPrice}</span>
-            </label>
-          </div>`);}).join('')}
-        </div>
-      </section>
-
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${description}</p>
-
-       <!-- <div class="event__photos-container">
-          <div class="event__photos-tape">
-            <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-            <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-            <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-            <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-            <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-          </div>
-      </div>-->
-      </section>
+        ${offersTemplate}
+        ${destinationsTemplate} <!-- сюда заезжает уже связанное с типом точки описание - это коммент для меня из будущего, потом удалю  -->
       </section>
     </form>
     </li>`
@@ -131,14 +161,14 @@ const createEditPointTemplate = (point, offersByPointType, destinationsByPointTy
 };
 
 export default class EditPointView {
-  constructor({point = NEW_TRIP_POINT, offersByPointType, destinationsByPointType}) {
+  constructor({point = NEW_TRIP_POINT, offers, destinations}) {
     this.point = point;
-    this.offersByPointType = offersByPointType;
-    this.destinationsByPointType = destinationsByPointType;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createEditPointTemplate(this.point, this.offersByPointType, this.destinationsByPointType);
+    return createEditPointTemplate(this.point, this.offers, this.destinations);
   }
 
   getElement() {

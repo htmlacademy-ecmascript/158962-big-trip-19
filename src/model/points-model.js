@@ -11,9 +11,8 @@ export default class PointsModel {
     return this.points;
   }
 
-  getOffersByPointType() {
-    const pointsTypes = this.getPoints().slice().map(({ type }) => type); // собираются типы рандомных точек в массив
-    return this.offers.filter(({type}) => pointsTypes.includes(type)); // формируется массив из объектов офферов только тех точек, которые пришли, чтоб во вью уже заехали конкретные
+  getOffers() {
+    return this.offers;
   }
 
   getDestinations() {
