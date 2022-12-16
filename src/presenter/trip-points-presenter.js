@@ -39,15 +39,25 @@ export default class TripPointsPresenter {
       this.#tripList.element.replaceChild(pointComponent.element, pointEditForm.element);
     };
 
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceEditFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
     pointComponent.element.querySelectorAll('.event__rollup-btn').forEach((element) => {
       element.addEventListener('click', () => {
         replacePointToEditForm();
+        document.addEventListener('keydown', escKeyDownHandler);
       });
     });
 
     pointEditForm.element.querySelector('form.event--edit').addEventListener('submit', (evt) => {
       evt.preventDefault();
       replaceEditFormToPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
     });
 
     render(pointComponent, this.#tripList.element);
