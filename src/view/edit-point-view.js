@@ -15,7 +15,7 @@ const NEW_TRIP_POINT = {
 
 const createOffersTemplate = (offers, pointOffers) => {
 
-  if (offers?.length === 0) {
+  if (!offers?.length) {
 
     return '';
   }
@@ -47,7 +47,7 @@ const createOffersTemplate = (offers, pointOffers) => {
 
 const createDestinationTemplate = (destinations, description) => {
 
-  if (destinations?.length === 0) {
+  if (!destinations?.length) {
 
     return '';
   }
@@ -161,25 +161,30 @@ const createEditPointTemplate = (point, offers, destinations) => {
 };
 
 export default class EditPointView {
+  #element = null;
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({point = NEW_TRIP_POINT, offers, destinations}) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return createEditPointTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createEditPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
