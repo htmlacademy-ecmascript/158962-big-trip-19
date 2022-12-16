@@ -21,20 +21,36 @@ export default class TripPointsPresenter {
     this.#tripPoints = [...this.#pointsModel.points]; // get points()
     this.#offers = this.#pointsModel.offers; // get offers()
     this.#destinations = this.#pointsModel.destinations; // get destination()
-    const editPoint = new EditPointView({
-      point: this.#tripPoints[0],
-      offers: this.#offers,
-      destinations:this.#destinations,
+
+    render(this.#tripList, this.#eventContainer); // отрисовка ul в контейнер
+
+    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoints(tripPoint, this.#offers, this.#destinations)); //get element()
+  }
+
+  #renderTripPoints(point, offers, destinations) {
+    const pointComponent = new TripItemView({ point, offers, destinations });
+    const pointEditForm = new EditPointView({ point, offers, destinations });
+
+    const replacePointToEditForm = () => {
+      this.#tripList.element.replaceChild(pointEditForm.element, pointComponent.element);
+    };
+
+    const replaceEditFormToPoint = () => {
+      this.#tripList.element.replaceChild(pointComponent.element, pointEditForm.element);
+    };
+
+    pointComponent.element.querySelectorAll('.event__rollup-btn').forEach((element) => {
+      element.addEventListener('click', () => {
+        replacePointToEditForm();
+      });
     });
 
-    render(this.#tripList, this.#eventContainer);
-    render(editPoint, this.#tripList.element); //get element()
+    pointEditForm.element.querySelector('form.event--edit').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+    });
 
-    this.#tripPoints.forEach((tripPoint) => render(new TripItemView({
-      point: tripPoint,
-      offers: this.#offers,
-      destinations:this.#destinations,
-    }), this.#tripList.element)); //get element()
+    render(pointComponent, this.#tripList.element);
   }
 }
 
