@@ -1,6 +1,7 @@
 import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
+import {isEscEvent} from '../utils';
 import {render} from '../render.js';
 
 export default class TripPointsPresenter {
@@ -18,16 +19,16 @@ export default class TripPointsPresenter {
   }
 
   init() {
-    this.#tripPoints = [...this.#pointsModel.points]; // get points()
-    this.#offers = this.#pointsModel.offers; // get offers()
-    this.#destinations = this.#pointsModel.destinations; // get destination()
+    this.#tripPoints = [...this.#pointsModel.points];
+    this.#offers = this.#pointsModel.offers;
+    this.#destinations = this.#pointsModel.destinations;
 
-    render(this.#tripList, this.#eventContainer); // отрисовка ul в контейнер
+    render(this.#tripList, this.#eventContainer);
 
-    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoints(tripPoint, this.#offers, this.#destinations)); //get element()
+    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
   }
 
-  #renderTripPoints(point, offers, destinations) {
+  #renderTripPoint(point, offers, destinations) {
     const pointComponent = new TripItemView({ point, offers, destinations });
     const pointEditForm = new EditPointView({ point, offers, destinations });
 
@@ -40,7 +41,7 @@ export default class TripPointsPresenter {
     };
 
     const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
+      if (isEscEvent(evt)) {
         evt.preventDefault();
         replaceEditFormToPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
