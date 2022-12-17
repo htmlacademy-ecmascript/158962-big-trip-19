@@ -3,7 +3,7 @@ import {formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestina
 
 const createOffersTemplate = (offers) => {
 
-  if (offers?.length === 0) {
+  if (!offers?.length) {
 
     return '';
   }
@@ -23,7 +23,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
   const tripTimeTo = formatTripTime(dateTo);
   const tripTimeFrom = formatTripTime(dateFrom);
   const offersByType = getOffersByType(offers, point)?. offers;
-  const offersForRender = offersByType.filter(({id}) => pointOffers.includes(id));
+  const offersForRender = offersByType ? offersByType.filter(({id}) => pointOffers.includes(id)) : '';
   const { name } = getDescriptionByDestinationId(destinations, point);
 
   const offersTemplate = createOffersTemplate(offersForRender);
@@ -75,25 +75,30 @@ const createTripItemTemplate = (point, offers, destinations) => {
 };
 
 export default class TripItemView {
+  #element = null;
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({point, offers, destinations}) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return createTripItemTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

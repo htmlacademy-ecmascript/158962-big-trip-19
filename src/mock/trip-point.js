@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 const offersByType = [
   {
-    type: 'taxi',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -36,7 +36,7 @@ const offersByType = [
   },
 
   {
-    type: 'bus',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -67,7 +67,7 @@ const offersByType = [
   },
 
   {
-    type: 'train',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -99,7 +99,7 @@ const offersByType = [
   },
 
   {
-    type: 'ship',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -130,7 +130,7 @@ const offersByType = [
   },
 
   {
-    type: 'drive',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -161,7 +161,7 @@ const offersByType = [
   },
 
   {
-    type: 'flight',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -192,7 +192,7 @@ const offersByType = [
   },
 
   {
-    type: 'check-in',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -223,7 +223,7 @@ const offersByType = [
   },
 
   {
-    type: 'sightseeing',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,
@@ -255,7 +255,7 @@ const offersByType = [
   },
 
   {
-    type: 'restaurant',
+    type: getRandomArrayElement(TYPES),
     offers: [
       {
         id: 1,

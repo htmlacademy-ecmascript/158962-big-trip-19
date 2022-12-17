@@ -7,19 +7,15 @@ const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format('D
 const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:MM') : '';
 const getOffersByType = (offers, point) => offers.find((offer) => offer.type === point.type);
 const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.id);
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const getRandomArrayLength = (elements) => {
-  const randomIndex = randomIntFromInterval(1, elements.length); // генерирую случайное число на которое будет отрезаться массив
-
-  return elements.slice(0, randomIndex);
-};
-
-export {getRandomArrayElement,
+export {
+  getRandomArrayElement,
   randomIntFromInterval,
   formatTripDate,
   formatTripDayEditForm,
   formatTripTime,
   getOffersByType,
   getDescriptionByDestinationId,
-  getRandomArrayLength,
+  isEscEvent,
 };
