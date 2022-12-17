@@ -1,6 +1,7 @@
 import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
+import EmptyPointView from '../view/empty-point-view';
 import {isEscEvent} from '../utils';
 import {render} from '../render.js';
 
@@ -23,9 +24,12 @@ export default class TripPointsPresenter {
     this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
 
-    render(this.#tripList, this.#eventContainer);
-
-    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
+    if (this.#tripPoints.length === 0) {
+      render(new EmptyPointView(), this.#eventContainer);
+    } else {
+      render(this.#tripList, this.#eventContainer);
+      this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
+    }
   }
 
   #renderTripPoint(point, offers, destinations) {
@@ -53,6 +57,11 @@ export default class TripPointsPresenter {
         replacePointToEditForm();
         document.addEventListener('keydown', escKeyDownHandler);
       });
+    });
+
+    pointEditForm.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceEditFormToPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
     });
 
     pointEditForm.element.querySelector('form.event--edit').addEventListener('submit', (evt) => {
