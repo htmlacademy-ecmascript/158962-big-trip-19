@@ -1,5 +1,9 @@
 import {createElement} from '../render.js';
 import {formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId} from '../utils';
+import {calculateDifference} from '../utils';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 const createOffersTemplate = (offers) => {
 
@@ -25,8 +29,8 @@ const createTripItemTemplate = (point, offers, destinations) => {
   const offersByType = getOffersByType(offers, point)?. offers;
   const offersForRender = offersByType ? offersByType.filter(({id}) => pointOffers.includes(id)) : '';
   const { name } = getDescriptionByDestinationId(destinations, point);
-
   const offersTemplate = createOffersTemplate(offersForRender);
+  const tripDuration = calculateDifference(dateFrom, dateTo);
 
   return (
     `<li class="trip-events__item">
@@ -49,7 +53,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
             <time class="event__end-time"
                   datetime="2019-03-18T11:00">${tripTimeTo}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${tripDuration}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
@@ -64,7 +68,8 @@ const createTripItemTemplate = (point, offers, destinations) => {
                width="28"
                height="28"
                viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688
+            14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
           </svg>
         </button>
         <button class="event__rollup-btn" type="button">
