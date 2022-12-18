@@ -25,7 +25,7 @@ export default class TripPointsPresenter {
     this.#destinations = this.#pointsModel.destinations;
 
     if (this.#tripPoints.length === 0) {
-      render(new EmptyPointView(), this.#eventContainer);
+      return render(new EmptyPointView(), this.#eventContainer);
     }
     render(this.#tripList, this.#eventContainer);
     this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
