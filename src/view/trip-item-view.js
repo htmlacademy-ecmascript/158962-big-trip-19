@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
-import {formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId} from '../utils';
-import {calculateDifference} from '../utils';
+import AbstractView from '../framework/view/abstract-view.js';
+import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils';
+import { calculateDifference } from '../utils';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
@@ -27,7 +27,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
   const tripTimeTo = formatTripTime(dateTo);
   const tripTimeFrom = formatTripTime(dateFrom);
   const offersByType = getOffersByType(offers, point)?. offers;
-  const offersForRender = offersByType ? offersByType.filter(({id}) => pointOffers.includes(id)) : '';
+  const offersForRender = offersByType?.filter(({id}) => pointOffers.includes(id));
   const { name } = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
   const tripDuration = calculateDifference(dateFrom, dateTo);
@@ -79,31 +79,27 @@ const createTripItemTemplate = (point, offers, destinations) => {
     </li>`);
 };
 
-export default class TripItemView {
-  #element = null;
+export default class TripItemView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
+  #handleClick = null;
 
-  constructor({point, offers, destinations}) {
+  constructor({point, offers, destinations, onClick}) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#handleClick = onClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
   }
 
   get template() {
     return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = () => {
+    this.#handleClick();
+  };
 }

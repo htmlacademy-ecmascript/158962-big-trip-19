@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {MINUTES_PER_HOUR, MINUTES_PER_DAY} from './const';
+import { MINUTES_PER_HOUR, MINUTES_PER_DAY } from './const';
 
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -11,9 +11,7 @@ const getDescriptionByDestinationId = (destinations, point) => destinations.find
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 const calculateDifference = (startTime, endTime) => {
-  const convertStartTimeToMinutes = Math.floor(Date.parse(startTime) / 60000);
-  const convertEndTimeToMinutes = Math.floor(Date.parse(endTime) / 60000);
-  const difference = dayjs(convertEndTimeToMinutes).diff(dayjs(convertStartTimeToMinutes));
+  const difference = Math.floor(dayjs(endTime).diff(dayjs(startTime))) / 60000;
 
   if (difference < MINUTES_PER_HOUR) {
     return dayjs.duration(difference, 'minutes').format('mm[M]');

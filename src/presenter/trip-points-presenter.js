@@ -2,8 +2,9 @@ import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
 import EmptyPointView from '../view/empty-point-view';
-import {isEscEvent} from '../utils';
-import {render} from '../render.js';
+import { isEscEvent } from '../utils';
+import { render } from '../framework/render.js';
+import dayjs from 'dayjs';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
@@ -27,50 +28,53 @@ export default class TripPointsPresenter {
     if (this.#tripPoints.length === 0) {
       return render(new EmptyPointView(), this.#eventContainer);
     }
+
     render(this.#tripList, this.#eventContainer);
-    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
+    const sortedTripPointsByDate = this.#tripPoints.sort((a, b) => (dayjs(a.dateFrom).isAfter(dayjs(b.dateFrom)) ? 1 : -1));
+    sortedTripPointsByDate.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
   }
 
   #renderTripPoint(point, offers, destinations) {
-    const pointComponent = new TripItemView({ point, offers, destinations });
-    const pointEditForm = new EditPointView({ point, offers, destinations });
-
-    const replacePointToEditForm = () => {
-      this.#tripList.element.replaceChild(pointEditForm.element, pointComponent.element);
-    };
-
-    const replaceEditFormToPoint = () => {
-      this.#tripList.element.replaceChild(pointComponent.element, pointEditForm.element);
-    };
-
     const escKeyDownHandler = (evt) => {
       if (isEscEvent(evt)) {
         evt.preventDefault();
-        replaceEditFormToPoint();
+        replaceEditFormToPoint.call(this);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
 
-    pointComponent.element.querySelectorAll('.event__rollup-btn').forEach((element) => {
-      element.addEventListener('click', () => {
-        replacePointToEditForm();
+    const pointComponent = new TripItemView({
+      point,
+      offers,
+      destinations,
+      onClick: () => {
+        replacePointToEditForm.call(this);
         document.addEventListener('keydown', escKeyDownHandler);
-      });
+      }
+    });
+    const pointEditForm = new EditPointView({
+      point,
+      offers,
+      destinations,
+      onFormSubmit: () => {
+        replaceEditFormToPoint.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onClick: () => {
+        replaceEditFormToPoint.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
     });
 
-    pointEditForm.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceEditFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    });
+    function replacePointToEditForm() {
+      this.#tripList.element.replaceChild(pointEditForm.element, pointComponent.element);
+      // здесь тоже почему то подчеркивается this.#tripList - potentially invalid reference access
+    }
 
-    pointEditForm.element.querySelector('form.event--edit').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceEditFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    });
+    function replaceEditFormToPoint() {
+      this.#tripList.element.replaceChild(pointComponent.element, pointEditForm.element);
+    }
 
     render(pointComponent, this.#tripList.element);
   }
 }
-
-

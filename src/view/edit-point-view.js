@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
-import {formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId} from '../utils';
-import {TYPES} from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
+import { formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils';
+import { TYPES } from '../const';
 
 const NEW_TRIP_POINT = {
   id: 1,
@@ -160,31 +160,35 @@ const createEditPointTemplate = (point, offers, destinations) => {
   );
 };
 
-export default class EditPointView {
-  #element = null;
+export default class EditPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
+  #handleEditFormSubmit = null;
+  #handleEditFormClick = null;
 
-  constructor({point = NEW_TRIP_POINT, offers, destinations}) {
+  constructor({point = NEW_TRIP_POINT, offers, destinations, onFormSubmit, onClick}) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#handleEditFormSubmit = onFormSubmit;
+    this.#handleEditFormClick = onClick;
+
+    this.element.querySelector('form.event--edit').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formClickHandler);
   }
 
   get template() {
     return createEditPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditFormSubmit(); // у тебя тоже тут подчеркивается #handleEditFormSubmi? Method expression can be null or undefined
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formClickHandler = () => {
+    this.#handleEditFormClick();
+  };
 }

@@ -1,6 +1,6 @@
-import {getRandomTripPoint} from '../mock/trip-point';
-import {POINTS_COUNT} from '../const';
-import {offersByType, destinations} from '../mock/trip-point';
+import { getRandomTripPoint } from '../mock/trip-point';
+import { POINTS_COUNT } from '../const';
+import { offersByType, destinations } from '../mock/trip-point';
 
 export default class PointsModel {
   #points = Array.from({length: POINTS_COUNT}, getRandomTripPoint);
