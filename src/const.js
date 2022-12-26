@@ -6,10 +6,10 @@ const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 const MINUTES_PER_HOUR = 60;
 const MINUTES_PER_DAY = 1440;
 const TEXTS_FOR_EMPTY_SHEET = {
-  everything: 'Click New Event to create your first point',
-  past: 'There are no past events now',
-  present: 'There are no present events now',
-  future: 'There are no future events now',
+  emptyPointsList: 'Click New Event to create your first point',
+  emptyPointsListForPast: 'There are no past events now',
+  emptyPointsListForPresent: 'There are no present events now',
+  emptyPointsListForFuture: 'There are no future events now',
 };
 
 export {

@@ -6,9 +6,7 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 const createOffersTemplate = (offers) => {
-
   if (!offers?.length) {
-
     return '';
   }
 
@@ -20,6 +18,7 @@ const createOffersTemplate = (offers) => {
    </li>`).join('')}
   `);
 };
+
 const createTripItemTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers} = point;
   const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
@@ -100,6 +99,6 @@ export default class TripItemView extends AbstractView {
   }
 
   #clickHandler = () => {
-    this.#handleClick();
+    this?.#handleClick();
   };
 }

@@ -14,9 +14,7 @@ const NEW_TRIP_POINT = {
 };
 
 const createOffersTemplate = (offers, pointOffers) => {
-
   if (!offers?.length) {
-
     return '';
   }
 
@@ -176,7 +174,7 @@ export default class EditPointView extends AbstractView {
     this.#handleEditFormClick = onClick;
 
     this.element.querySelector('form.event--edit').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
@@ -185,10 +183,6 @@ export default class EditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditFormSubmit(); // у тебя тоже тут подчеркивается #handleEditFormSubmi? Method expression can be null or undefined
-  };
-
-  #formClickHandler = () => {
-    this.#handleEditFormClick();
+    this?.#handleEditFormSubmit();
   };
 }

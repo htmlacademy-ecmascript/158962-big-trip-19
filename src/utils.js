@@ -18,7 +18,7 @@ const calculateDifference = (startTime, endTime) => {
   } else if (difference >= MINUTES_PER_HOUR && difference < MINUTES_PER_DAY) {
     return dayjs.duration(difference, 'minutes').format('HH[H] mm[M]');
   } else if (difference >= MINUTES_PER_DAY) {
-    return dayjs.duration(difference, 'minutes').format('DD[d] HH[H] mm[M]');
+    return dayjs.duration(difference, 'minutes').format('DD[D] HH[H] mm[M]');
   }
 };
 
