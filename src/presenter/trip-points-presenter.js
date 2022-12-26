@@ -2,8 +2,10 @@ import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
 import EmptyPointView from '../view/empty-point-view';
-import {isEscEvent} from '../utils';
-import {render} from '../render.js';
+import { isEscEvent } from '../utils';
+import { render, replace } from '../framework/render.js';
+import dayjs from 'dayjs';
+import { TEXTS_FOR_EMPTY_SHEET } from '../const';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
@@ -11,7 +13,6 @@ export default class TripPointsPresenter {
   #offers = null;
   #destinations = null;
   #tripPoints = [];
-
   #tripList = new TripEventList();
 
   constructor({eventContainer, pointsModel}) {
@@ -24,25 +25,21 @@ export default class TripPointsPresenter {
     this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
 
+    const { emptyPointsList } = TEXTS_FOR_EMPTY_SHEET;
     if (this.#tripPoints.length === 0) {
-      return render(new EmptyPointView(), this.#eventContainer);
+      return render(new EmptyPointView(emptyPointsList), this.#eventContainer);
     }
+
     render(this.#tripList, this.#eventContainer);
-    this.#tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
+    const sortedTripPointsByDate = this.#tripPoints.sort((pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom)));
+    this.#renderPoints(sortedTripPointsByDate);
+  }
+
+  #renderPoints(tripPoints) {
+    return tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
   }
 
   #renderTripPoint(point, offers, destinations) {
-    const pointComponent = new TripItemView({ point, offers, destinations });
-    const pointEditForm = new EditPointView({ point, offers, destinations });
-
-    const replacePointToEditForm = () => {
-      this.#tripList.element.replaceChild(pointEditForm.element, pointComponent.element);
-    };
-
-    const replaceEditFormToPoint = () => {
-      this.#tripList.element.replaceChild(pointComponent.element, pointEditForm.element);
-    };
-
     const escKeyDownHandler = (evt) => {
       if (isEscEvent(evt)) {
         evt.preventDefault();
@@ -51,26 +48,38 @@ export default class TripPointsPresenter {
       }
     };
 
-    pointComponent.element.querySelectorAll('.event__rollup-btn').forEach((element) => {
-      element.addEventListener('click', () => {
+    const pointComponent = new TripItemView({
+      point,
+      offers,
+      destinations,
+      onClick: () => {
         replacePointToEditForm();
         document.addEventListener('keydown', escKeyDownHandler);
-      });
+      }
     });
 
-    pointEditForm.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceEditFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
+    const pointEditForm = new EditPointView({
+      point,
+      offers,
+      destinations,
+      onFormSubmit: () => {
+        replaceEditFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onClick: () => {
+        replaceEditFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
     });
 
-    pointEditForm.element.querySelector('form.event--edit').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceEditFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    });
+    function replacePointToEditForm() {
+      replace(pointEditForm, pointComponent);
+    }
+
+    function replaceEditFormToPoint() {
+      replace(pointComponent, pointEditForm);
+    }
 
     render(pointComponent, this.#tripList.element);
   }
 }
-
-

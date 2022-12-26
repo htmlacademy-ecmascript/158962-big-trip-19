@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
-import {formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId} from '../utils';
-import {TYPES} from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
+import { formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils';
+import { TYPES } from '../const';
 
 const NEW_TRIP_POINT = {
   id: 1,
@@ -14,9 +14,7 @@ const NEW_TRIP_POINT = {
 };
 
 const createOffersTemplate = (offers, pointOffers) => {
-
   if (!offers?.length) {
-
     return '';
   }
 
@@ -160,31 +158,29 @@ const createEditPointTemplate = (point, offers, destinations) => {
   );
 };
 
-export default class EditPointView {
-  #element = null;
+export default class EditPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
+  #handleEditFormSubmit = null;
 
-  constructor({point = NEW_TRIP_POINT, offers, destinations}) {
+  constructor({point = NEW_TRIP_POINT, offers, destinations, onFormSubmit}) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#handleEditFormSubmit = onFormSubmit;
+
+    this.element.querySelector('form.event--edit').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
     return createEditPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this?.#handleEditFormSubmit();
+  };
 }

@@ -1,8 +1,8 @@
 import FilterView from './view/filter-view.js';
 import SortListView from './view/sort-list-view.js';
 import TripInfoView from './view/trip-info-view';
-import {render} from './render.js';
-import {RenderPosition} from './render.js';
+import { render } from './framework/render.js';
+import { RenderPosition } from './framework/render.js';
 import TripPointsPresenter from './presenter/trip-points-presenter';
 import PointsModel from './model/points-model.js';
 
