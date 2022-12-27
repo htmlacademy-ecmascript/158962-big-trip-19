@@ -1,6 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils';
-import { calculateDifference } from '../utils';
+import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId, calculateDifference } from '../utils/point.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
@@ -12,21 +11,21 @@ const createOffersTemplate = (offers) => {
 
   return (`
   ${offers.map(({ title, price: offerPrice }) => `<li class="event__offer">
-      <span class="event__offer-title">${title}</span>
+      <span class="event__offer-title">${ title }</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offerPrice}</span>
+      <span class="event__offer-price">${ offerPrice }</span>
    </li>`).join('')}
   `);
 };
 
 const createTripItemTemplate = (point, offers, destinations) => {
-  const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers} = point;
+  const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers } = point;
   const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
   const tripDate = formatTripDate(dateFrom);
   const tripTimeTo = formatTripTime(dateTo);
   const tripTimeFrom = formatTripTime(dateFrom);
   const offersByType = getOffersByType(offers, point)?. offers;
-  const offersForRender = offersByType?.filter(({id}) => pointOffers.includes(id));
+  const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
   const { name } = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
   const tripDuration = calculateDifference(dateFrom, dateTo);

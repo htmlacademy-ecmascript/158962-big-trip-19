@@ -1,4 +1,4 @@
-import {getRandomArrayElement, randomIntFromInterval} from '../utils.js';
+import {getRandomArrayElement, randomIntFromInterval} from '../utils/common.js';
 import {PRICES, TYPES, DESTINATIONS, DESCRIPTIONS} from '../const';
 import dayjs from 'dayjs';
 
@@ -293,8 +293,8 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs().add(1, 'hour').add(30, 'minute'),
+    dateFrom: dayjs().subtract(5, 'd'),
+    dateTo: dayjs().subtract(1, 'hour').add(30, 'minute'),
     offers: [3, 5],
   },
 
@@ -304,8 +304,8 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs().subtract(2, 'd'),
-    dateTo: dayjs().add(5, 'day').add(1, 'hour').add(30, 'minute'),
+    dateFrom: dayjs().subtract(7, 'd'),
+    dateTo: dayjs().subtract(2, 'day').add(1, 'hour').add(30, 'minute'),
     offers: [1, 2, 3],
   },
 
@@ -315,8 +315,8 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs().subtract(1, 'd'),
-    dateTo: dayjs().add(2, 'day').add(3, 'hour').add(45, 'minute'),
+    dateFrom: dayjs().subtract(5, 'd'),
+    dateTo: dayjs().subtract(2, 'day').add(3, 'hour').add(45, 'minute'),
     offers: [1, 2, 3],
   },
 
@@ -326,7 +326,7 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs(),
+    dateFrom: dayjs().add(3, 'h'),
     dateTo:  dayjs().add(3, 'hour').add(45, 'minute'),
     offers: [2, 3, 4],
   },
@@ -337,8 +337,8 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs(),
-    dateTo: dayjs().add(5, 'hour').add(25, 'minute'),
+    dateFrom: dayjs().add(2, 'd'),
+    dateTo: dayjs().add(5, 'd').add(25, 'minute'),
     offers: [1, 2],
   },
 
@@ -370,8 +370,8 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs(),
-    dateTo: dayjs().add(3, 'hour'),
+    dateFrom: dayjs().add(4, 'd'),
+    dateTo: dayjs().add(7, 'hour'),
     offers: [1, 2, 3],
   },
 
@@ -381,7 +381,7 @@ const tripPoints = [
     destination: randomIntFromInterval(1, 5),
     isFavorite: Math.random() > 0.5,
     price: getRandomArrayElement(PRICES),
-    dateFrom: dayjs(),
+    dateFrom: dayjs().subtract(1, 'd'),
     dateTo: dayjs().add(0.2, 'h'),
     offers: [1, 2, 4],
   },
