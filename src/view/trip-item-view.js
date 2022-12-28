@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId, calculateDifference } from '../utils/point.js';
+import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId, calculateTripDuration } from '../utils/point.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
@@ -28,7 +28,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
   const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
   const { name } = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
-  const tripDuration = calculateDifference(dateFrom, dateTo);
+  const tripDuration = calculateTripDuration(point);
 
   return (
     `<li class="trip-events__item">

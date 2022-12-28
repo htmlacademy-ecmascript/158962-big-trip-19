@@ -7,8 +7,10 @@ const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:MM') 
 const getOffersByType = (offers, point) => offers.find((offer) => offer.type === point.type);
 const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.id);
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
-const calculateDifference = (startTime, endTime) => {
-  const difference = Math.floor(dayjs(endTime).diff(dayjs(startTime))) / 60000;
+const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
+
+const calculateTripDuration = (point) => {
+  const difference = getDifferenceFromTripDates(point);
 
   if (difference < MINUTES_PER_HOUR) {
     return dayjs.duration(difference, 'minutes').format('mm[M]');
@@ -26,5 +28,6 @@ export {
   getOffersByType,
   getDescriptionByDestinationId,
   isEscEvent,
-  calculateDifference,
+  calculateTripDuration,
+  getDifferenceFromTripDates,
 };
