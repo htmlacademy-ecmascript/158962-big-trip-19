@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils';
-import { TYPES } from '../const';
+import { formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils/point.js';
+import { TYPES } from '../const.js';
 
 const NEW_TRIP_POINT = {
   id: 1,
@@ -57,7 +57,7 @@ const createDestinationTemplate = (destinations, description) => {
 
       <div class="event__photos-container">
       <div class="event__photos-tape">
-      ${destinations.map(({pictures: pictureForDescription}) => {
+      ${destinations.map(({ pictures: pictureForDescription }) => {
       const [picture] = pictureForDescription;
 
       return `<img class="event__photo" src="${picture.src}.jpg" alt="Event photo">`;
@@ -164,7 +164,7 @@ export default class EditPointView extends AbstractView {
   #destinations = null;
   #handleEditFormSubmit = null;
 
-  constructor({point = NEW_TRIP_POINT, offers, destinations, onFormSubmit}) {
+  constructor({ point = NEW_TRIP_POINT, offers, destinations, onFormSubmit }) {
     super();
     this.#point = point;
     this.#offers = offers;

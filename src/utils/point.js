@@ -1,17 +1,16 @@
 import dayjs from 'dayjs';
-import { MINUTES_PER_HOUR, MINUTES_PER_DAY } from './const';
+import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from '../const';
 
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
-const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMM M') : '';
 const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format('DD/MM/YY') : '';
 const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:MM') : '';
 const getOffersByType = (offers, point) => offers.find((offer) => offer.type === point.type);
 const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.id);
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
 
-const calculateDifference = (startTime, endTime) => {
-  const difference = Math.floor(dayjs(endTime).diff(dayjs(startTime))) / 60000;
+const calculateTripDuration = (point) => {
+  const difference = getDifferenceFromTripDates(point);
 
   if (difference < MINUTES_PER_HOUR) {
     return dayjs.duration(difference, 'minutes').format('mm[M]');
@@ -23,13 +22,12 @@ const calculateDifference = (startTime, endTime) => {
 };
 
 export {
-  getRandomArrayElement,
-  randomIntFromInterval,
   formatTripDate,
   formatTripDayEditForm,
   formatTripTime,
   getOffersByType,
   getDescriptionByDestinationId,
   isEscEvent,
-  calculateDifference,
+  calculateTripDuration,
+  getDifferenceFromTripDates,
 };

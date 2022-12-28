@@ -2,10 +2,11 @@ import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
 import TripItemView from '../view/trip-item-view';
 import EmptyPointView from '../view/empty-point-view';
-import { isEscEvent } from '../utils';
 import { render, replace } from '../framework/render.js';
-import dayjs from 'dayjs';
 import { TEXTS_FOR_EMPTY_SHEET } from '../const';
+import { isEscEvent } from '../utils/point.js';
+import { filterPointsByFuture, filterPointsByPast, filterPointsByPresent } from '../utils/filter.js';
+import { sortByPrice, sortByDefault , sortByDuration, } from '../utils/sort.js';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
@@ -15,7 +16,7 @@ export default class TripPointsPresenter {
   #tripPoints = [];
   #tripList = new TripEventList();
 
-  constructor({eventContainer, pointsModel}) {
+  constructor({ eventContainer, pointsModel }) {
     this.#eventContainer = eventContainer;
     this.#pointsModel = pointsModel;
   }
@@ -31,8 +32,7 @@ export default class TripPointsPresenter {
     }
 
     render(this.#tripList, this.#eventContainer);
-    const sortedTripPointsByDate = this.#tripPoints.sort((pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom)));
-    this.#renderPoints(sortedTripPointsByDate);
+    this.#renderPoints(sortByDefault(this.#tripPoints));
   }
 
   #renderPoints(tripPoints) {
