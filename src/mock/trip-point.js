@@ -1,6 +1,7 @@
 import {getRandomArrayElement, randomIntFromInterval} from '../utils/common.js';
 import {PRICES, TYPES, DESTINATIONS, DESCRIPTIONS} from '../const';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
 
 const offersByType = [
@@ -497,5 +498,9 @@ const destinations = [
 ];
 
 // функция обертка, возвращает случайную точку маршрута
-const getRandomTripPoint = () => getRandomArrayElement(tripPoints);
-export {getRandomTripPoint, offersByType, tripPoints, destinations};
+const getRandomTripPoint = () => ({
+  key: nanoid(),
+  ...getRandomArrayElement(tripPoints)
+});
+
+export { getRandomTripPoint, offersByType, tripPoints, destinations };

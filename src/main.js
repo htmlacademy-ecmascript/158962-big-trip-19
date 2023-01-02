@@ -1,5 +1,4 @@
 import FilterView from './view/filter-view.js';
-import SortListView from './view/sort-list-view.js';
 import TripInfoView from './view/trip-info-view';
 import { render } from './framework/render.js';
 import { RenderPosition } from './framework/render.js';
@@ -18,6 +17,5 @@ const tripPointsPresenter = new TripPointsPresenter({
 
 render(new TripInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 render(new FilterView(), filterContainer);
-render(new SortListView(), tripEventsContainer);
 
 tripPointsPresenter.init();

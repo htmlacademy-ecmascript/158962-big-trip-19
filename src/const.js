@@ -20,13 +20,14 @@ const TEXTS_FOR_EMPTY_SHEET = {
   emptyPointsListForFuture: 'There are no future events now',
 };
 
-const sortList = {
-  day: '',
-  event: 'disabled',
-  time: '',
-  price: 'checked',
-  offers: 'disabled',
+const SortType = {
+  DAY: 'day',
+  EVENT: 'disabled',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'disabled',
 };
+
 
 export {
   POINTS_COUNT,
@@ -38,6 +39,6 @@ export {
   MINUTES_PER_DAY,
   MINUTES_PER_HOUR,
   filterType,
-  sortList,
+  SortType,
 };
 
