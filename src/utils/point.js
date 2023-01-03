@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from '../const';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMM M') : '';
 const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format('DD/MM/YY') : '';

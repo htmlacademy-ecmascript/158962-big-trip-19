@@ -1,8 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formatTripDate, formatTripTime, getOffersByType, getDescriptionByDestinationId, calculateTripDuration } from '../utils/point.js';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
 
 const createOffersTemplate = (offers) => {
   if (!offers?.length) {
@@ -81,23 +78,25 @@ export default class TripItemView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
-  #handleClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({point, offers, destinations, onClick}) {
+  constructor({point, offers, destinations, onClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#handleClick = onClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', onClick);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
     return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  #clickHandler = () => {
-    this?.#handleClick();
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

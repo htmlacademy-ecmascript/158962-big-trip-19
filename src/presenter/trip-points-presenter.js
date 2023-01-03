@@ -1,12 +1,12 @@
-import EditPointView from '../view/edit-point-view';
 import TripEventList from '../view/trip-event-list';
-import TripItemView from '../view/trip-item-view';
 import EmptyPointView from '../view/empty-point-view';
-import { render, replace } from '../framework/render.js';
-import { TEXTS_FOR_EMPTY_SHEET } from '../const';
-import { isEscEvent } from '../utils/point.js';
+import { render, RenderPosition } from '../framework/render.js';
+import { TEXTS_FOR_EMPTY_SHEET, SortType } from '../const';
 import { filterPointsByFuture, filterPointsByPast, filterPointsByPresent } from '../utils/filter.js';
-import { sortByPrice, sortByDefault , sortByDuration, } from '../utils/sort.js';
+import { sortByPrice, sortByDay , sortByDuration, } from '../utils/sort.js';
+import { updatePoint } from '../utils/common';
+import SortListView from '../view/sort-list-view';
+import PointPresenter from './point-presenter';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
@@ -15,6 +15,11 @@ export default class TripPointsPresenter {
   #destinations = null;
   #tripPoints = [];
   #tripList = new TripEventList();
+  #emptyPointComponent = new EmptyPointView(TEXTS_FOR_EMPTY_SHEET.emptyPointsList);
+  #pointPresenter = new Map();
+  #sortComponent = null;
+  #currentSortType = SortType.DAY;
+  #sourcedTripPoints = [];
 
   constructor({ eventContainer, pointsModel }) {
     this.#eventContainer = eventContainer;
@@ -23,63 +28,86 @@ export default class TripPointsPresenter {
 
   init() {
     this.#tripPoints = [...this.#pointsModel.points];
+    this.#sourcedTripPoints = [...this.#pointsModel.points];
     this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
 
-    const { emptyPointsList } = TEXTS_FOR_EMPTY_SHEET;
     if (this.#tripPoints.length === 0) {
-      return render(new EmptyPointView(emptyPointsList), this.#eventContainer);
+      this.#renderEmptyPointsList();
+
+      return;
     }
 
     render(this.#tripList, this.#eventContainer);
-    this.#renderPoints(sortByDefault(this.#tripPoints));
+    this.#renderSort();
+    this.#renderPoints(sortByDay(this.#tripPoints));
   }
 
   #renderPoints(tripPoints) {
     return tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
   }
 
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handlePointChange = (updatedPoint) => {
+    this.#tripPoints = updatePoint(this.#tripPoints, updatedPoint);
+    this.#sourcedTripPoints = updatePoint(this.#sourcedTripPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.key).init(updatedPoint, this.#offers, this.#destinations);
+  };
+
+  #sortTasks(sortType) {
+    switch (sortType) {
+      case SortType.TIME.value:
+        sortByDuration(this.#tripPoints);
+        break;
+      case SortType.PRICE.value:
+        sortByPrice(this.#tripPoints);
+        break;
+      case SortType.DAY.value:
+        sortByDay(this.#tripPoints);
+        break;
+      default:
+        throw new Error(`Unknown order state: '${sortType}'!`);
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortTasks(sortType);
+    this.#clearPointsList();
+    this.#renderPoints(this.#tripPoints);
+  };
+
+  #renderSort() {
+    this.#sortComponent = new SortListView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+    render(this.#sortComponent, this.#eventContainer, RenderPosition.AFTERBEGIN);
+  }
+
   #renderTripPoint(point, offers, destinations) {
-    const escKeyDownHandler = (evt) => {
-      if (isEscEvent(evt)) {
-        evt.preventDefault();
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const pointComponent = new TripItemView({
-      point,
-      offers,
-      destinations,
-      onClick: () => {
-        replacePointToEditForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const pointPresenter = new PointPresenter({
+      tripList: this.#tripList.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
+    pointPresenter.init(point, offers, destinations);
+    this.#pointPresenter.set(point.key, pointPresenter);
+  }
 
-    const pointEditForm = new EditPointView({
-      point,
-      offers,
-      destinations,
-      onFormSubmit: () => {
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onClick: () => {
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
+  #renderEmptyPointsList() {
+    render(this.#emptyPointComponent, this.#eventContainer);
+  }
 
-    function replacePointToEditForm() {
-      replace(pointEditForm, pointComponent);
-    }
-
-    function replaceEditFormToPoint() {
-      replace(pointComponent, pointEditForm);
-    }
-
-    render(pointComponent, this.#tripList.element);
+  #clearPointsList() {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 }
