@@ -47,7 +47,7 @@ export default class PointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
-      onClick: () => this.#handleFormSubmit,
+      onClick:  this.#handleCloseFormClick,
     });
 
     if (prevPointComponent === null || prevEditFormComponent === null) {
@@ -104,6 +104,10 @@ export default class PointPresenter {
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(point);
+    this.#replaceEditFormToPoint();
+  };
+
+  #handleCloseFormClick = () => {
     this.#replaceEditFormToPoint();
   };
 

@@ -21,11 +21,26 @@ const TEXTS_FOR_EMPTY_SHEET = {
 };
 
 const SortType = {
-  DAY: 'day',
-  EVENT: 'disabled',
-  TIME: 'time',
-  PRICE: 'price',
-  OFFERS: 'disabled',
+  DAY: {
+    value: 'day',
+    state: ''
+  },
+  EVENT: {
+    value: 'event',
+    state: 'disabled'
+  },
+  TIME: {
+    value: 'time',
+    state: ''
+  },
+  PRICE: {
+    value: 'price',
+    state: ''
+  },
+  OFFERS: {
+    value: 'offers',
+    state: 'disabled'
+  },
 };
 
 

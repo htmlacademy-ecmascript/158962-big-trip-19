@@ -99,8 +99,8 @@ const createEditPointTemplate = (point, offers, destinations) => {
                        class="event__type-input  visually-hidden"
                        type="radio"
                        name="event-type"
-                       value="taxi">
-                <label class="event__type-label  event__type-label--${offerType}" for="event-type-taxi-1">${offerType}</label>
+                       value="${offerType}">
+                <label class="event__type-label  event__type-label--${offerType}" for="event-type-${offerType}-1">${offerType}</label>
               </div>`).join('')}
             </fieldset>
           </div>
@@ -115,7 +115,9 @@ const createEditPointTemplate = (point, offers, destinations) => {
                  value="${name}"
                  list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value=${name}></option>
+            <option value="Amsterdam"></option>
+            <option value="Geneva"></option>
+            <option value="Chamonix"></option>
           </datalist>
         </div>
 
@@ -164,7 +166,7 @@ export default class EditPointView extends AbstractView {
   #destinations = null;
   #handleEditFormSubmit = null;
 
-  constructor({ point = NEW_TRIP_POINT, offers, destinations, onFormSubmit }) {
+  constructor({ point = NEW_TRIP_POINT, offers, destinations, onFormSubmit, onClick }) {
     super();
     this.#point = point;
     this.#offers = offers;
@@ -172,7 +174,7 @@ export default class EditPointView extends AbstractView {
     this.#handleEditFormSubmit = onFormSubmit;
 
     this.element.querySelector('form.event--edit').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', onClick);
   }
 
   get template() {

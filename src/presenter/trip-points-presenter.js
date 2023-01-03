@@ -33,7 +33,9 @@ export default class TripPointsPresenter {
     this.#destinations = this.#pointsModel.destinations;
 
     if (this.#tripPoints.length === 0) {
-      return this.#renderEmptyPointsList();
+      this.#renderEmptyPointsList();
+
+      return;
     }
 
     render(this.#tripList, this.#eventContainer);
@@ -57,15 +59,17 @@ export default class TripPointsPresenter {
 
   #sortTasks(sortType) {
     switch (sortType) {
-      case SortType.TIME:
+      case SortType.TIME.value:
         sortByDuration(this.#tripPoints);
         break;
-      case SortType.PRICE:
+      case SortType.PRICE.value:
         sortByPrice(this.#tripPoints);
         break;
+      case SortType.DAY.value:
+        sortByDay(this.#tripPoints);
+        break;
       default:
-        //sortByDay(this.#tripPoints);
-        this.#tripPoints = [...this.#sourcedTripPoints];
+        throw new Error(`Unknown order state: '${sortType}'!`);
     }
 
     this.#currentSortType = sortType;
@@ -99,7 +103,7 @@ export default class TripPointsPresenter {
   }
 
   #renderEmptyPointsList() {
-    return render(this.#emptyPointComponent, this.#eventContainer);
+    render(this.#emptyPointComponent, this.#eventContainer);
   }
 
   #clearPointsList() {
