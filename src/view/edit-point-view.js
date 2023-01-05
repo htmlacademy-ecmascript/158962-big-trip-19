@@ -223,7 +223,20 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #offerChangeHandler = (evt) => {
-    this._state.offers.push(Number(evt.target.dataset.offerId));
+    evt.preventDefault();
+
+    if (evt.target.hasAttribute('data-offer-id')) {
+      const currentOfferId = Number(evt.target.dataset.offerId);
+      const index = this._state.offers.indexOf(currentOfferId);
+
+      if (index === -1) {
+        this._state.offers.push(currentOfferId);
+
+        return;
+      }
+
+      this._state.offers.splice(index, 1);
+    }
   };
 
   #descriptionInputHandler = (evt) => {
