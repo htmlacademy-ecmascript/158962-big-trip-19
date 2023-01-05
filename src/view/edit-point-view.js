@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { formatTripDayEditForm, formatTripTime, getOffersByType, getDescriptionByDestinationId } from '../utils/point.js';
+import { formatFormDate, getOffersByType, getDescriptionByDestinationId } from '../utils/point.js';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 
@@ -93,10 +93,8 @@ const createEventTypeListTemplate = (types, currentType) => types.map((type) => 
 
 const createEditPointTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, offers: pointOffers} = point;
-  const tripDateFrom = formatTripDayEditForm(dateFrom);
-  const tripDateTo = formatTripDayEditForm(dateTo);
-  const tripTimeFrom = formatTripTime(dateFrom);
-  const tripTimeTo = formatTripTime(dateTo);
+  const tripDateFrom = formatFormDate(dateFrom);
+  const tripDateTo = formatFormDate(dateTo);
   const offersByType = getOffersByType(offers, point)?. offers;
   const { description, name, pictures } = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersByType, pointOffers);
@@ -141,14 +139,14 @@ const createEditPointTemplate = (point, offers, destinations) => {
                  id="event-start-time-1"
                  type="text"
                  name="event-start-time"
-                 value="${tripDateFrom} ${tripTimeFrom}">
+                 value="${tripDateFrom}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
           <input class="event__input  event__input--time"
                  id="event-end-time-1"
                  type="text"
                  name="event-end-time"
-                 value="${tripDateTo} ${tripTimeTo}">
+                 value="${tripDateTo}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -180,7 +178,8 @@ export default class EditPointView extends AbstractStatefulView {
   #destinations = null;
   #handleEditFormSubmit = null;
   #onClick = null;
-  #datepicker = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ point = NEW_TRIP_POINT, offers, destinations, onFormSubmit, onClick }) {
     super();
@@ -196,9 +195,14 @@ export default class EditPointView extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
     }
   }
 
@@ -283,25 +287,29 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #setDatepickerForDateFrom() {
-    this.#datepicker = flatpickr(
+    this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
+        //minDate: this._state.dateTo,
         defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler,
+        time24hr: true
       },
     );
   }
 
   #setDatepickerForDateTo() {
-    this.#datepicker = flatpickr(
+    this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
+        minDate: this._state.dateFrom,
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler,
+        time24hr: true
       },
     );
   }
