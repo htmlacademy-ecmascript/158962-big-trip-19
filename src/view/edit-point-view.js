@@ -76,20 +76,20 @@ const createDestinationOptionsTemplate = (options) => {
   return options.map((option) => `<option value=${option.name}></option>`).join('');
 };
 
-const createEventTypeListTemplate = (types, currentType, point) => types.map((type) => {
+const createEventTypeListTemplate = (types, currentType, pointId) => types.map((type) => {
   const checked = type === currentType ? 'checked' : '';
   const eventType = capitalizeFirstLetter(type);
 
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-${point.id}"
+      <input id="event-type-${type}-${pointId}"
              class="event__type-input  visually-hidden"
              type="radio"
              name="event-type"
              data-event-type="true"
              value="${type}"
              ${checked}>
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${point.id}">${eventType}</label>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${pointId}">${eventType}</label>
     </div>`);
 }).join('');
 
@@ -116,7 +116,7 @@ const createEditPointTemplate = (point, offers, pointDestinations) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${createEventTypeListTemplate(TYPES, type, point)}
+              ${createEventTypeListTemplate(TYPES, type, id)}
             </fieldset>
           </div>
         </div>
