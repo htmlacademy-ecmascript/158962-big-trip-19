@@ -110,6 +110,7 @@ export default class PointPresenter {
   };
 
   #handleCloseFormClick = () => {
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceEditFormToPoint();
   };
 
