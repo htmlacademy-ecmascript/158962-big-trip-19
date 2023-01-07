@@ -4,10 +4,10 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMM M') : '';
-const formatTripDayEditForm = (tripDate) => tripDate ? dayjs(tripDate).format('DD/MM/YY') : '';
-const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:MM') : '';
+const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:mm') : '';
+const formatFormDate = (tripDate) => dayjs(tripDate).format('DD/MM/YY HH:mm');
 const getOffersByType = (offers, point) => offers.find((offer) => offer.type === point.type);
-const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.id);
+const getDescriptionByDestinationId = (destinations, point) => destinations.find((destination) => destination.id === point.destination);
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
 
@@ -25,7 +25,7 @@ const calculateTripDuration = (point) => {
 
 export {
   formatTripDate,
-  formatTripDayEditForm,
+  formatFormDate,
   formatTripTime,
   getOffersByType,
   getDescriptionByDestinationId,

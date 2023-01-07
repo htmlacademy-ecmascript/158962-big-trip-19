@@ -97,6 +97,6 @@ export default class TripItemView extends AbstractView {
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFavoriteClick();
+    this.#handleFavoriteClick?.();
   };
 }

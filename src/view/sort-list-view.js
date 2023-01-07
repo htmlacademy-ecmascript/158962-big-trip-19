@@ -32,10 +32,10 @@ export default class SortListView extends AbstractView {
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (!evt.target.hasAttribute('data-sort-type')) {
+    if (!evt.target.dataset.sortType) {
       return;
     }
 
-    this.#handleSortTypeChange(evt.target.dataset.sortType);
+    this.#handleSortTypeChange?.(evt.target.dataset.sortType);
   };
 }
