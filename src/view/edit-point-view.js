@@ -250,12 +250,12 @@ export default class EditPointView extends AbstractStatefulView {
       const index = this._state.offers.indexOf(currentOfferId);
 
       if (index === -1) {
-        this._state.offers.push(currentOfferId);
+        this._setState(this._state.offers.push(currentOfferId));
 
         return;
       }
 
-      this._state.offers.splice(index, 1);
+      this._setState(this._state.offers.splice(index, 1));
     }
   };
 
