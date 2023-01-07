@@ -41,7 +41,8 @@ const createOffersTemplate = (offers, pointOffers, pointId) => {
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${availableOfferPrice}</span>
           </label>
-        </div>`);}).join('')}
+        </div>`);
+    }).join('')}
        </div>
       </section>`
   );
