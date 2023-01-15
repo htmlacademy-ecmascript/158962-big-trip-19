@@ -6,18 +6,11 @@ const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 const MINUTES_PER_HOUR = 60;
 const MINUTES_PER_DAY = 1440;
 
-const filterType = {
-  everything: 'checked',
-  future: '',
-  present: '',
-  past: '',
-};
-
-const TEXTS_FOR_EMPTY_SHEET = {
-  emptyPointsList: 'Click New Event to create your first point',
-  emptyPointsListForPast: 'There are no past events now',
-  emptyPointsListForPresent: 'There are no present events now',
-  emptyPointsListForFuture: 'There are no future events now',
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 const SortType = {
@@ -43,6 +36,25 @@ const SortType = {
   },
 };
 
+const TEXTS_FOR_EMPTY_SHEET = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.FUTURE]: 'There are no future events now',
+};
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 
 export {
   POINTS_COUNT,
@@ -53,7 +65,9 @@ export {
   TEXTS_FOR_EMPTY_SHEET,
   MINUTES_PER_DAY,
   MINUTES_PER_HOUR,
-  filterType,
+  FilterType,
   SortType,
+  UpdateType,
+  UserAction,
 };
 
