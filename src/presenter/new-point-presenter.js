@@ -1,5 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view';
+import { isEscEvent } from '../utils/point';
 import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 
@@ -8,32 +9,31 @@ export default class NewPointPresenter {
   #pointEditComponent = null;
   #handleDataChange = null;
   #handleDestroy = null;
+  #offers = null;
+  #destinations = null;
+  #isPointEdit = null;
 
-  //#point = null;
-  //#offers = null;
-  //#destinations = null;
-
-  constructor({tripList, onDataChange, onDestroy}) {
+  constructor({tripList, onDataChange, onDestroy, isPointEdit = false}) {
     this.#tripList = tripList;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#isPointEdit = isPointEdit;
   }
 
-  init() {
-    /*this.#point = point;
+  init(offers, destinations) {
+    this.#offers = offers;
     this.#destinations = destinations;
-    this.#offers = offers;*/
 
     if (this.#pointEditComponent !== null) {
       return;
     }
 
     this.#pointEditComponent = new EditPointView({
-      //point: this.#point,
-      //offers: this.#offers,
-      //destinations: this.#destinations,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      offers: this.#offers,
+      destinations: this.#destinations,
+      onFormNewPointSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
+      isPointEdit: this.#isPointEdit,
     });
 
     render(this.#pointEditComponent, this.#tripList, RenderPosition.AFTERBEGIN);
@@ -53,11 +53,11 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (task) => {
+  #handleFormSubmit = (point) => {
     this.#handleDataChange?.(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...task},
+      {key: nanoid(), ...point},
     );
     this.destroy();
   };
@@ -67,7 +67,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscEvent(evt)) {
       evt.preventDefault();
       this.destroy();
     }

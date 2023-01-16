@@ -2,7 +2,7 @@ import TripEventList from '../view/trip-event-list';
 import EmptyPointView from '../view/empty-point-view';
 import { render, RenderPosition, remove } from '../framework/render.js';
 import { SortType, FilterType, UpdateType, UserAction, POINTS_COUNT } from '../const';
-import { filter } from '../utils/filter.js';
+import { filterGroup } from '../utils/filter.js';
 import { sortByPrice, sortByDay , sortByDuration, } from '../utils/sort.js';
 import SortListView from '../view/sort-list-view';
 import PointPresenter from './point-presenter';
@@ -19,7 +19,7 @@ export default class TripPointsPresenter {
   #pointPresenter = new Map();
   #newPointPresenter = null;
   #sortComponent = null;
-  #currentSortType = SortType.DAY;
+  #currentSortType = SortType.DAY.value;
   #filterType = FilterType.EVERYTHING;
   #renderedPointCount = POINTS_COUNT;
 
@@ -44,23 +44,28 @@ export default class TripPointsPresenter {
     this.#renderTripBoard();
   }
 
-  createTask() {
-    this.#currentSortType = SortType.DAY;
+  createPoint() {
+    this.#currentSortType = SortType.DAY.value;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init();
+    this.#newPointPresenter.init(this.#offers, this.#destinations);
   }
 
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = filterGroup[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.TIME.value:
-        return sortByDuration(filteredPoints);
+        sortByDuration(filteredPoints);
+        break;
       case SortType.PRICE.value:
-        return sortByPrice(filteredPoints);
+        sortByPrice(filteredPoints);
+        break;
       case SortType.DAY.value:
-        return sortByDay(filteredPoints);
+        sortByDay(filteredPoints);
+        break;
+      default:
+        throw new Error(`Unknown order state: '${this.#currentSortType}'!`);
     }
 
     return filteredPoints;
@@ -163,7 +168,6 @@ export default class TripPointsPresenter {
 
   #clearPointsList({resetRenderedPointCount = false, resetSortType = false} = {}) {
     const pointCount = this.points.length;
-    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
@@ -180,7 +184,7 @@ export default class TripPointsPresenter {
     }
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DAY;
+      this.#currentSortType = SortType.DAY.value;
     }
   }
 }

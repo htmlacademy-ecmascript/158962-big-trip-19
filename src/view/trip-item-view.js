@@ -23,7 +23,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
   const tripTimeFrom = formatTripTime(dateFrom);
   const offersByType = getOffersByType(offers, point)?. offers;
   const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
-  const { name } = getDescriptionByDestinationId(destinations, point);
+  const destination = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
   const tripDuration = calculateTripDuration(point);
 
@@ -39,7 +39,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
                src="img/icons/${type}.png"
                alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${name}</h3>
+        <h3 class="event__title">${type} ${destination?.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time"
