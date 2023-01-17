@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from '../const';
 import duration from 'dayjs/plugin/duration';
-import {tripPoints} from "../mock/trip-point";
 dayjs.extend(duration);
 
 const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMM M') : '';
@@ -12,7 +11,7 @@ const getDescriptionByDestinationId = (destinations, point) => destinations?.fin
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
-const calculateTotalPrice = (points) => points.reduce((acc, point) => acc + point.price, 0);
+const calculateTotalPrice = (points) => points.reduce((acc, point) => acc + Number(point.price), 0);
 
 const calculateTripDuration = (point) => {
   const difference = getDifferenceFromTripDates(point);

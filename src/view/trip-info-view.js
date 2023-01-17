@@ -1,7 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { calculateTotalPrice } from '../utils/point';
+import AbstractView from '../framework/view/abstract-view';
 
-const createTripInfoTemplate = (points) => (
+const createTripInfoTemplate = (totalSum) => (
   `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
@@ -10,20 +9,23 @@ const createTripInfoTemplate = (points) => (
     </div>
 
     <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${calculateTotalPrice(points)}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalSum}</span>
     </p>
   </section>`
 );
 
 export default class TripInfoView extends AbstractView {
-  #points = null;
-  constructor({ points }) {
+  #totalSum = null;
+  constructor({ totalSum }) {
     super();
-    this.#points = points;
+    this.#totalSum = totalSum;
+    //this.#points = points;
+    //this._setState(EditPointView.parsePointToState(points));
   }
+
   get template() {
-    console.log(this.#points)
-    return createTripInfoTemplate(this.#points);
+    //console.log(this.#totalSum)
+    return createTripInfoTemplate(this.#totalSum);
   }
 }
 

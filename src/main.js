@@ -1,4 +1,3 @@
-import TripInfoView from './view/trip-info-view';
 import { render } from './framework/render.js';
 import { RenderPosition } from './framework/render.js';
 import TripPointsPresenter from './presenter/trip-points-presenter';
@@ -23,7 +22,6 @@ const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
 });
 
-render(new TripInfoView({points: pointsModel.points}), tripInfoContainer, RenderPosition.AFTERBEGIN);
 render(newPointButtonComponent, tripInfoContainer, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter({
   filterContainer: filterContainer,

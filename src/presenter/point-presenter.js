@@ -111,13 +111,10 @@ export default class PointPresenter {
 
   #handleFormSubmit = (update) => {
     const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom);
-    //const isMinorUpdateDateTo = !isDatesEqual(this.#point.dateTo, update.dateTo);
     const updateType = isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH;
-    //const updateTypeForDateTo = isMinorUpdateDateTo ? UpdateType.MINOR : UpdateType.PATCH;
     this.#handleDataChange?.(
       UserAction.UPDATE_POINT,
       updateType,
-      //updateTypeForDateTo,
       update,
     );
     this.#replaceEditFormToPoint();
