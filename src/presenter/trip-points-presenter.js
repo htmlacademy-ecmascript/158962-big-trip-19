@@ -7,8 +7,7 @@ import { sortByPrice, sortByDay , sortByDuration, } from '../utils/sort.js';
 import SortListView from '../view/sort-list-view';
 import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
-import { calculateTotalPrice } from '../utils/point.js';
-import TripInfoView from '../view/trip-info-view';
+import TripRoutePresenter from './trip-route-presenter';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
@@ -18,7 +17,7 @@ export default class TripPointsPresenter {
   #noPointComponent = null;
   #filterModel = null;
   #tripList = new TripEventList();
-  #tripInfoComponent = null;
+  #tripInfoPresenter = null;
   #pointPresenter = new Map();
   #newPointPresenter = null;
   #sortComponent = null;
@@ -37,6 +36,8 @@ export default class TripPointsPresenter {
       onDestroy: onNewPointDestroy
     });
 
+    this.#tripInfoPresenter = new TripRoutePresenter({pointsModel});
+    this.#tripInfoPresenter.init();
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -83,7 +84,6 @@ export default class TripPointsPresenter {
   }
 
   #renderTripBoard() {
-    this.#renderTripInfo();
     render(this.#tripList, this.#eventContainer);
 
     const points = this.points;
@@ -153,10 +153,7 @@ export default class TripPointsPresenter {
   };
 
   #renderTripInfo() {
-    const tripRout = new TripRout
-    //this.#tripInfoComponent = new TripInfoView({totalSum: calculateTotalPrice(this.#pointsModel.points)});
-    //const tripInfoContainer = document.querySelector('.trip-main');
-    //render(this.#tripInfoComponent, tripInfoContainer, RenderPosition.AFTERBEGIN);
+
   }
 
   #renderSort() {
@@ -182,7 +179,7 @@ export default class TripPointsPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
-    //remove(this.#tripInfoComponent);
+    //remove(this.#tripInfoPresenter);
     remove(this.#sortComponent);
 
     if (this.#noPointComponent) {

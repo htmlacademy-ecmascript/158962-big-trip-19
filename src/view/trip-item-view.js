@@ -17,11 +17,13 @@ const createOffersTemplate = (offers) => {
 
 const createTripItemTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers } = point;
+  //console.log('pointOffers', pointOffers)
   const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
   const tripDate = formatTripDate(dateFrom);
   const tripTimeTo = formatTripTime(dateTo);
   const tripTimeFrom = formatTripTime(dateFrom);
   const offersByType = getOffersByType(offers, point)?. offers;
+  //console.log('offersByType',offersByType)
   const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
   const destination = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
@@ -92,7 +94,7 @@ export default class TripItemView extends AbstractView {
   }
 
   get template() {
-    console.log(this.#offers)
+    //console.log(this.#offers)
     return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 

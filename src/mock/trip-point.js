@@ -256,7 +256,7 @@ const offersByType = [
   },
 
   {
-    type: 'ship',
+    type: 'bus',
     offers: [
       {
         id: 1,

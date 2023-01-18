@@ -19,8 +19,6 @@ export default class TripInfoView extends AbstractView {
   constructor({ totalSum }) {
     super();
     this.#totalSum = totalSum;
-    //this.#points = points;
-    //this._setState(EditPointView.parsePointToState(points));
   }
 
   get template() {
