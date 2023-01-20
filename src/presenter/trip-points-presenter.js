@@ -152,10 +152,6 @@ export default class TripPointsPresenter {
     this.#renderTripBoard();
   };
 
-  #renderTripInfo() {
-
-  }
-
   #renderSort() {
     this.#sortComponent = new SortListView({
       currentSortType: this.#currentSortType,
@@ -179,7 +175,6 @@ export default class TripPointsPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
-    //remove(this.#tripInfoPresenter);
     remove(this.#sortComponent);
 
     if (this.#noPointComponent) {

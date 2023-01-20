@@ -1,8 +1,8 @@
 import { render, replace, remove, RenderPosition } from '../framework/render.js';
 import TripInfoView from '../view/trip-info-view';
-import { calculateTotalPrice } from '../utils/point';
 import { sortByDay } from '../utils/sort';
-import dayjs from 'dayjs';
+import { formatTripDate } from '../utils/point';
+import { MAX_LENGTH_FOR_RENDER } from '../const';
 
 const tripInfoContainer = document.querySelector('.trip-main');
 
@@ -22,9 +22,9 @@ export default class TripRoutePresenter {
   init() {
     const prevTripRoutComponent = this.#tripRoutComponent;
     this.#tripRoutComponent = new TripInfoView({
-      totalSum: this.#handleSum(),
-      routeTitle: this.#handleRouteTitle(),
-      routeDates: this.#handleRouteDates(),
+      totalSum: this.#calculateTotalSum(),
+      routeTitle: this.#createRouteTitle(),
+      routeDates: this.#createRouteDates(),
     });
 
     if (prevTripRoutComponent === null) {
@@ -40,56 +40,38 @@ export default class TripRoutePresenter {
     this.init();
   };
 
-  #handleSum = () => {
-    //1 На этой же итерации никуда не выходим, зная тип точки находим все офферы по этому типу
-    // 2 Запускаем по этим офферам цикл
-    // 3 На каждой итерации проверяем есть ли айди текущего оффера у нас в массиве в поинте, если да + к цене
-    const allPointsPrices = [];
+  #calculateTotalSum = () => {
+    let totalPrice = 0;
     this.#pointsModel.points.forEach((point) => {
-      allPointsPrices.push(point.price);
-      const offersByType = this.#pointsModel.offers.filter((offer) => offer.type === point.type);
-
-      offersByType.forEach((offer) => {
-        if (point.type === offer.type) {
-          offer.offers.map((item) => {
-            if (point.offers.includes(item.id)) {
-              return allPointsPrices.push(item.price);
-            }
-          });
+      totalPrice += point.price;
+      const offersByType = this.#pointsModel.offers.find((offer) => offer.type === point.type);
+      offersByType.offers.forEach((offer) => {
+        if (point.offers.includes(offer.id)) {
+          totalPrice += offer.price;
         }
       });
     });
-
-    return calculateTotalPrice(allPointsPrices);
+    return totalPrice;
   };
 
-  #handleRouteTitle = () => {
+  #createRouteTitle = () => {
     const sortedData = sortByDay([...this.#pointsModel.points]);
     const destinationNames = this.#pointsModel.destinations
       .filter((destination) => sortedData
         .some((point) => destination.id === point.destination))
       .map((destinationById) => destinationById.name);
 
-    const firstCity = destinationNames.at(0);
-    const secondCity = destinationNames.at(1);
-    const lastCity = destinationNames.at(-1);
     if (destinationNames.length === 0) {
       return '';
-    } else if (destinationNames.length === 1) {
-      return `${firstCity}`;
-    } else if (destinationNames.length === 2) {
-      return `${firstCity} — ${lastCity}`;
-    } else if (destinationNames.length === 3) {
-      return `${firstCity} — ${secondCity}  —  ${lastCity}`;
-    } else if (destinationNames.length > 3) {
-      return `${firstCity} — ... — ${lastCity}`;
+    } else if (destinationNames.length <= MAX_LENGTH_FOR_RENDER) {
+      return destinationNames.join('—');
     }
 
+    return `${destinationNames[0]} — ... — ${destinationNames[destinationNames.length - 1]}`;
   };
 
-  #handleRouteDates = () => {
-    const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('D MMM') : '';
+  #createRouteDates = () => {
     const sortedData = sortByDay([...this.#pointsModel.points]);
-    return `${formatTripDate(sortedData.at(0)?.dateFrom)} — ${formatTripDate(sortedData.at(-1)?.dateTo)}`;
+    return `${formatTripDate(sortedData.at(0)?.dateFrom, 'D MMM')} — ${formatTripDate(sortedData.at(-1)?.dateTo, 'D MMM')}`;
   };
 }

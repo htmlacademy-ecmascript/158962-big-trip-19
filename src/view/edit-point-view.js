@@ -1,12 +1,11 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {formatFormDate, getOffersByType, getDescriptionByDestinationId, calculateTotalPrice} from '../utils/point.js';
+import { formatFormDate, getOffersByType, getDescriptionByDestinationId } from '../utils/point.js';
 import { capitalizeFirstLetter } from '../utils/common';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
-import he from 'he';
 
 const NEW_TRIP_POINT = {
   id: nanoid(),
@@ -99,8 +98,8 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
   const {id, dateFrom, dateTo, type, price, offers: pointOffers} = point;
   const resetButtonText = isPointEdit ? 'Delete' : 'Cancel';
   const editPointElementClass = isPointEdit ? 'event--edit-form' : 'event--edit-new';
-  const tripDateFrom = formatFormDate(dateFrom);
-  const tripDateTo = formatFormDate(dateTo);
+  const tripDateFrom = formatFormDate(dateFrom, 'DD/MM/YY HH:mm');
+  const tripDateTo = formatFormDate(dateTo, 'DD/MM/YY HH:mm');
   const offersByType = getOffersByType(offers, point)?. offers;
   const destination = getDescriptionByDestinationId(pointDestinations, point);
   const offersTemplate = createOffersTemplate(offersByType, pointOffers, id);
@@ -148,7 +147,7 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
                  id="event-destination-1"
                  type="text"
                  name="event-destination"
-                 value="${he.encode(destination?.name || '')}"
+                 value="${destination?.name || ''}"
 
                  list="destination-list-1">
           <datalist id="destination-list-1">
@@ -183,7 +182,7 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
                  min="1"
                  step="1"
                  name="event-price"
-                 value="${he.encode(String(price))}">
+                 value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue"

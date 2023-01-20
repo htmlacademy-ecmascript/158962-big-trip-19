@@ -17,13 +17,11 @@ const createOffersTemplate = (offers) => {
 
 const createTripItemTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers } = point;
-  //console.log('pointOffers', pointOffers)
   const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
-  const tripDate = formatTripDate(dateFrom);
-  const tripTimeTo = formatTripTime(dateTo);
-  const tripTimeFrom = formatTripTime(dateFrom);
+  const tripDate = formatTripDate(dateFrom, 'MMM M');
+  const tripTimeTo = formatTripTime(dateTo, 'HH:mm');
+  const tripTimeFrom = formatTripTime(dateFrom, 'HH:mm');
   const offersByType = getOffersByType(offers, point)?. offers;
-  //console.log('offersByType',offersByType)
   const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
   const destination = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);

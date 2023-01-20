@@ -3,15 +3,14 @@ import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from '../const';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-const formatTripDate = (tripDate) => tripDate ? dayjs(tripDate).format('MMM M') : '';
-const formatTripTime = (tripTime) => tripTime ? dayjs(tripTime).format('HH:mm') : '';
-const formatFormDate = (tripDate) => dayjs(tripDate).format('DD/MM/YY HH:mm');
+const formatTripDate = (tripDate, format) => tripDate ? dayjs(tripDate).format(format) : '';
+const formatTripTime = (tripTime, format) => tripTime ? dayjs(tripTime).format(format) : '';
+const formatFormDate = (tripDate, format) => dayjs(tripDate).format(format);
 const getOffersByType = (offers, point) => offers?.find((offer) => offer.type === point.type);
 const getDescriptionByDestinationId = (destinations, point) => destinations?.find((destination) => destination.id === point.destination);
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
-const calculateTotalPrice = (prices) => prices.reduce((acc, number) => acc + Number(number), 0);
 
 const calculateTripDuration = (point) => {
   const difference = getDifferenceFromTripDates(point);
@@ -35,5 +34,4 @@ export {
   calculateTripDuration,
   getDifferenceFromTripDates,
   isDatesEqual,
-  calculateTotalPrice,
 };
