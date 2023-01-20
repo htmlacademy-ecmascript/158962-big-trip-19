@@ -5,25 +5,19 @@ const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 's
 const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.', 'description3', 'description4', 'description5', 'description6'];
 const MINUTES_PER_HOUR = 60;
 const MINUTES_PER_DAY = 1440;
+const MAX_LENGTH_FOR_RENDER = 3;
 
-const filterType = {
-  everything: 'checked',
-  future: '',
-  present: '',
-  past: '',
-};
-
-const TEXTS_FOR_EMPTY_SHEET = {
-  emptyPointsList: 'Click New Event to create your first point',
-  emptyPointsListForPast: 'There are no past events now',
-  emptyPointsListForPresent: 'There are no present events now',
-  emptyPointsListForFuture: 'There are no future events now',
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 const SortType = {
   DAY: {
     value: 'day',
-    state: ''
+    state: 'enabled'
   },
   EVENT: {
     value: 'event',
@@ -31,16 +25,35 @@ const SortType = {
   },
   TIME: {
     value: 'time',
-    state: ''
+    state: 'enabled'
   },
   PRICE: {
     value: 'price',
-    state: ''
+    state: 'enabled'
   },
   OFFERS: {
     value: 'offers',
     state: 'disabled'
   },
+};
+
+const TEXTS_FOR_EMPTY_SHEET = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.FUTURE]: 'There are no future events now',
+};
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
 };
 
 
@@ -53,7 +66,10 @@ export {
   TEXTS_FOR_EMPTY_SHEET,
   MINUTES_PER_DAY,
   MINUTES_PER_HOUR,
-  filterType,
+  MAX_LENGTH_FOR_RENDER,
+  FilterType,
   SortType,
+  UpdateType,
+  UserAction,
 };
 

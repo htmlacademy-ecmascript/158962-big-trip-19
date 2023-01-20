@@ -18,12 +18,12 @@ const createOffersTemplate = (offers) => {
 const createTripItemTemplate = (point, offers, destinations) => {
   const { dateFrom, dateTo, type, price, isFavorite, offers: pointOffers } = point;
   const activeFavoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
-  const tripDate = formatTripDate(dateFrom);
-  const tripTimeTo = formatTripTime(dateTo);
-  const tripTimeFrom = formatTripTime(dateFrom);
+  const tripDate = formatTripDate(dateFrom, 'MMM M');
+  const tripTimeTo = formatTripTime(dateTo, 'HH:mm');
+  const tripTimeFrom = formatTripTime(dateFrom, 'HH:mm');
   const offersByType = getOffersByType(offers, point)?. offers;
   const offersForRender = offersByType?.filter(({ id }) => pointOffers.includes(id));
-  const { name } = getDescriptionByDestinationId(destinations, point);
+  const destination = getDescriptionByDestinationId(destinations, point);
   const offersTemplate = createOffersTemplate(offersForRender);
   const tripDuration = calculateTripDuration(point);
 
@@ -39,7 +39,7 @@ const createTripItemTemplate = (point, offers, destinations) => {
                src="img/icons/${type}.png"
                alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${name}</h3>
+        <h3 class="event__title">${type} ${destination?.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time"
@@ -92,6 +92,7 @@ export default class TripItemView extends AbstractView {
   }
 
   get template() {
+    //console.log(this.#offers)
     return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 

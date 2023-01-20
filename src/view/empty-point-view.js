@@ -1,16 +1,20 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { TEXTS_FOR_EMPTY_SHEET } from '../const';
 
-const createNoPointTemplate = (message) => `<p class="trip-events__msg">${message}</p>`;
+const createNoPointTemplate = (filterType) => {
+  const noPointsTextValue = TEXTS_FOR_EMPTY_SHEET[filterType];
+  return (`<p class="trip-events__msg">${noPointsTextValue}</p>`);
+};
 
 export default class EmptyPointView extends AbstractView {
-  #message = null;
+  #filterType = null;
 
-  constructor(message) {
+  constructor({ filterType }) {
     super();
-    this.#message = message;
+    this.#filterType = filterType;
   }
 
   get template() {
-    return createNoPointTemplate(this.#message);
+    return createNoPointTemplate(this.#filterType);
   }
 }
