@@ -45,12 +45,7 @@ export default class TripPointsPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-   init() {
-    //this.#offers = this.#pointsModel.offers;
-    //console.log(this.#pointsModel.offers)
-    //this.#destinations = this.#pointsModel.destinations;
-    //console.log('this.#destinations1', this.#destinations);
-    //console.log('this.#pointsModel.points', this.#pointsModel.points)
+  init() {
     this.#renderTripBoard();
   }
 
@@ -187,7 +182,7 @@ export default class TripPointsPresenter {
       onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point, offers, destinations);
-    this.#pointPresenter.set(point.key, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #clearPointsList({resetRenderedPointCount = false, resetSortType = false} = {}) {
