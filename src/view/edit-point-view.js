@@ -62,7 +62,7 @@ const createDestinationTemplate = (pointDestinations, description, pictures, nam
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${pictures?.map(({ src }) => `<img class="event__photo" src="${src}.jpg" alt="Photo of ${name}">`).join('')}
+          ${pictures?.map(({ src }) => `<img class="event__photo" src="${src}" alt="Photo of ${name}">`).join('')}
         </div>
       </div>
     </section>
