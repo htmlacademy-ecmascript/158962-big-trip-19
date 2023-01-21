@@ -10,7 +10,6 @@ const getOffersByType = (offers, point) => offers?.find((offer) => offer.type ==
 const getDescriptionByDestinationId = (destinations, point) => destinations?.find((destination) => destination.id === point.destination);
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const getDifferenceFromTripDates = (point) => Math.floor(dayjs(point.dateTo).diff(dayjs(point.dateFrom))) / 60000;
-const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
 const calculateTripDuration = (point) => {
   const difference = getDifferenceFromTripDates(point);
@@ -33,5 +32,4 @@ export {
   isEscEvent,
   calculateTripDuration,
   getDifferenceFromTripDates,
-  isDatesEqual,
 };

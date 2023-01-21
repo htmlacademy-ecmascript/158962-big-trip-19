@@ -3,6 +3,8 @@ const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 's
 const MINUTES_PER_HOUR = 60;
 const MINUTES_PER_DAY = 1440;
 const MAX_LENGTH_FOR_RENDER = 3;
+const AUTHORIZATION = 'Basic hS2sfS44wcl1sa2j';
+const END_POINT = 'https://19.ecmascript.pages.academy/big-trip';
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -66,5 +68,7 @@ export {
   SortType,
   UpdateType,
   UserAction,
+  AUTHORIZATION,
+  END_POINT,
 };
 

@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import TripItemView from '../view/trip-item-view';
-import { isEscEvent, isDatesEqual} from '../utils/point';
+import { isEscEvent } from '../utils/point';
 import EditPointView from '../view/edit-point-view';
 import { UserAction, UpdateType } from '../const.js';
 
@@ -110,12 +110,9 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (update) => {
-    //const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom);
-    //const updateType = isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH;
     this.#handleDataChange?.(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      //updateType,
       update,
     );
     this.#replaceEditFormToPoint();

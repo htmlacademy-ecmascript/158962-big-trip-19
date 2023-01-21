@@ -6,9 +6,8 @@ import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import NewPointButtonView from './view/new-point-button-view';
 import PointsApiService from './points-api-service';
+import { END_POINT, AUTHORIZATION } from './const';
 
-const AUTHORIZATION = 'Basic hS2sfS44wcl1sa2j';
-const END_POINT = 'https://19.ecmascript.pages.academy/big-trip';
 const pageMainContainer = document.querySelector('.page-main');
 const filterContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = pageMainContainer.querySelector('.trip-events');

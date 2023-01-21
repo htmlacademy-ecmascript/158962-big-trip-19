@@ -27,9 +27,11 @@ export default class PointsModel extends Observable {
 
   async init() {
     try {
-      const points = await this.#pointsApiService.points;
-      const offers = await this.#pointsApiService.offers;
-      const destinations = await this.#pointsApiService.destinations;
+      const data = await Promise.all([
+        this.#pointsApiService.points,
+        this.#pointsApiService.offers,
+        this.#pointsApiService.destinations]);
+      const [points, offers, destinations] = data;
       this.#points = points.map(this.#adaptToClient);
       this.#offers = offers;
       this.#destinations = destinations;
@@ -52,11 +54,13 @@ export default class PointsModel extends Observable {
     try {
       const response = await this.#pointsApiService.updatePoint(update);
       const updatedPoint = this.#adaptToClient(response);
+
       this.#points = [
         ...this.#points.slice(0, index),
         updatedPoint,
         ...this.#points.slice(index + 1),
       ];
+
       this._notify(updateType, updatedPoint);
     } catch(err) {
       throw new Error('Can\'t update point');
@@ -92,8 +96,8 @@ export default class PointsModel extends Observable {
 
   #adaptToClient(point) {
     const adaptedPoint = {...point,
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
       price: point['base_price'],
       isFavorite: point['is_favorite'],
     };
