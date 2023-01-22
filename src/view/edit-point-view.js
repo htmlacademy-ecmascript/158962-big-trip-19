@@ -92,7 +92,7 @@ const createEventTypeListTemplate = (types, currentType, pointId) => types.map((
     </div>`);
 }).join('');
 
-const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) => {
+const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit, isDisabled) => {
   const {id, dateFrom, dateTo, type, price, offers: pointOffers} = point;
   const resetButtonText = isPointEdit ? 'Delete' : 'Cancel';
   const editPointElementClass = isPointEdit ? 'event--edit-form' : 'event--edit-new';
@@ -186,6 +186,7 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
         <button class="event__save-btn  btn  btn--blue"
                 type="submit">Save</button>
         <button class="event__reset-btn"
+                ${isDisabled ? 'disabled' : ''}
                 type="reset">${resetButtonText}</button>
         ${createCloseFormButton()}
       </header>
@@ -301,11 +302,12 @@ export default class EditPointView extends AbstractStatefulView {
 
       if (index === -1) {
         this._state.offers.push(currentOfferId);
-
+        this._setState(this._state);
         return;
       }
 
       this._state.offers.splice(index, 1);
+      this._setState(this._state);
     }
   };
 
