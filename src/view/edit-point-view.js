@@ -4,11 +4,9 @@ import { capitalizeFirstLetter } from '../utils/common';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 
 const NEW_TRIP_POINT = {
-  id: nanoid(),
   type: TYPES[0],
   destination: null,
   isFavorite: false,
@@ -62,7 +60,7 @@ const createDestinationTemplate = (pointDestinations, description, pictures, nam
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${pictures?.map(({ src }) => `<img class="event__photo" src="${src}.jpg" alt="Photo of ${name}">`).join('')}
+          ${pictures?.map(({ src }) => `<img class="event__photo" src="${src}" alt="Photo of ${name}">`).join('')}
         </div>
       </div>
     </section>
@@ -291,7 +289,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   #priceChangeHandler = (evt) => {
     this.updateElement({
-      price: evt.target.value,
+      price: Number(evt.target.value),
     });
   };
 
@@ -302,12 +300,12 @@ export default class EditPointView extends AbstractStatefulView {
       const index = this._state.offers.indexOf(currentOfferId);
 
       if (index === -1) {
-        this._setState(this._state.offers.push(currentOfferId));
+        this._state.offers.push(currentOfferId);
 
         return;
       }
 
-      this._setState(this._state.offers.splice(index, 1));
+      this._state.offers.splice(index, 1);
     }
   };
 
@@ -344,7 +342,6 @@ export default class EditPointView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
-        //minDate: this._state.dateTo,
         defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler,
         time24hr: true

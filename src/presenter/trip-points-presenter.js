@@ -8,12 +8,11 @@ import SortListView from '../view/sort-list-view';
 import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
 import TripRoutePresenter from './trip-route-presenter';
+import LoadingView from '../view/loading-view.js';
 
 export default class TripPointsPresenter {
   #eventContainer = null;
   #pointsModel = null;
-  #offers = null;
-  #destinations = null;
   #noPointComponent = null;
   #filterModel = null;
   #tripList = new TripEventList();
@@ -24,6 +23,8 @@ export default class TripPointsPresenter {
   #currentSortType = SortType.DAY.value;
   #filterType = FilterType.EVERYTHING;
   #renderedPointCount = POINTS_COUNT;
+  #loadingComponent = new LoadingView();
+  #isLoading = true;
 
   constructor({ eventContainer, pointsModel, filterModel, onNewPointDestroy }) {
     this.#eventContainer = eventContainer;
@@ -43,15 +44,13 @@ export default class TripPointsPresenter {
   }
 
   init() {
-    this.#offers = this.#pointsModel.offers;
-    this.#destinations = this.#pointsModel.destinations;
     this.#renderTripBoard();
   }
 
   createPoint() {
     this.#currentSortType = SortType.DAY.value;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.#offers, this.#destinations);
+    this.#newPointPresenter.init(this.#pointsModel.offers, this.#pointsModel.destinations);
   }
 
   get points() {
@@ -86,6 +85,11 @@ export default class TripPointsPresenter {
   #renderTripBoard() {
     render(this.#tripList, this.#eventContainer);
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
     const pointCount = points.length;
 
@@ -98,8 +102,12 @@ export default class TripPointsPresenter {
     this.#renderPoints(points.slice(0, Math.min(pointCount, this.#renderedPointCount)));
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#eventContainer, RenderPosition.AFTERBEGIN);
+  }
+
   #renderPoints(tripPoints) {
-    return tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#offers, this.#destinations));
+    return tripPoints.forEach((tripPoint) => this.#renderTripPoint(tripPoint, this.#pointsModel.offers, this.#pointsModel.destinations));
   }
 
 
@@ -127,7 +135,7 @@ export default class TripPointsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.key).init(data, this.#offers, this.#destinations);
+        this.#pointPresenter.get(data.id).init(data, this.#pointsModel.offers, this.#pointsModel.destinations);
         break;
       case UpdateType.MINOR:
         this.#clearPointsList();
@@ -135,6 +143,11 @@ export default class TripPointsPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearPointsList({resetRenderedPointCount: true, resetSortType: true});
+        this.#renderTripBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderTripBoard();
         break;
       default:
@@ -167,7 +180,7 @@ export default class TripPointsPresenter {
       onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point, offers, destinations);
-    this.#pointPresenter.set(point.key, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #clearPointsList({resetRenderedPointCount = false, resetSortType = false} = {}) {
@@ -176,6 +189,7 @@ export default class TripPointsPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
