@@ -92,9 +92,9 @@ const createEventTypeListTemplate = (types, currentType, pointId) => types.map((
     </div>`);
 }).join('');
 
-const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit, isDisabled) => {
-  const {id, dateFrom, dateTo, type, price, offers: pointOffers} = point;
-  const resetButtonText = isPointEdit ? 'Delete' : 'Cancel';
+const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) => {
+  const {id, dateFrom, dateTo, type, price, offers: pointOffers, isDisabled, isSaving, isDeleting,} = point;
+  const resetButtonText = isPointEdit ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel';
   const editPointElementClass = isPointEdit ? 'event--edit-form' : 'event--edit-new';
   const tripDateFrom = formatFormDate(dateFrom, 'DD/MM/YY HH:mm');
   const tripDateTo = formatFormDate(dateTo, 'DD/MM/YY HH:mm');
@@ -102,6 +102,7 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit, 
   const destination = getDescriptionByDestinationId(pointDestinations, point);
   const offersTemplate = createOffersTemplate(offersByType, pointOffers, id);
   const destinationsTemplate = createDestinationTemplate(pointDestinations, destination?.description, destination?.pictures, destination?.name);
+  const isSubmitDisabled = price === '' || price === 0;
 
   const createCloseFormButton = () => {
     if (!isPointEdit) {
@@ -184,7 +185,10 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit, 
         </div>
 
         <button class="event__save-btn  btn  btn--blue"
-                type="submit">Save</button>
+                ${isSubmitDisabled || isDisabled ? 'disabled' : ''}
+                type="submit">
+                ${isSaving ? 'Saving...' : 'Save'}
+                </button>
         <button class="event__reset-btn"
                 ${isDisabled ? 'disabled' : ''}
                 type="reset">${resetButtonText}</button>
@@ -370,7 +374,20 @@ export default class EditPointView extends AbstractStatefulView {
     this.#handleDeleteClick?.(EditPointView.parseStateToPoint(this._state));
   };
 
-  static parsePointToState = (point) => ({ ...point });
+  static parsePointToState = (point) => ({
+    ...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+  });
 
-  static parseStateToPoint = (state) => ({ ...state });
+  static parseStateToPoint = (state) => {
+    const point = {...state};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  };
 }
