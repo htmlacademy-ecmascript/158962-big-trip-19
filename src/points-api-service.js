@@ -51,7 +51,7 @@ export default class PointsApiService extends ApiService {
 
   async deletePoint(point) {
     const response = await this._load({
-      url: `tasks/${point.id}`,
+      url: `points/${point.id}`,
       method: Method.DELETE,
     });
 
@@ -59,10 +59,11 @@ export default class PointsApiService extends ApiService {
   }
 
   #adaptToServer(point) {
-    const adaptedPoint = {...point,
+    const adaptedPoint = {
+      ...point,
+      'base_price': point.price,
       'date_from': point.dateFrom.toISOString(),
       'date_to': point.dateTo.toISOString(),
-      'base_price': point.price,
       'is_favorite': point.isFavorite,
     };
 

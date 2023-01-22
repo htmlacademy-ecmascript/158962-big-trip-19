@@ -13,8 +13,6 @@ import LoadingView from '../view/loading-view.js';
 export default class TripPointsPresenter {
   #eventContainer = null;
   #pointsModel = null;
-  //#offers = null;
-  //#destinations = null;
   #noPointComponent = null;
   #filterModel = null;
   #tripList = new TripEventList();

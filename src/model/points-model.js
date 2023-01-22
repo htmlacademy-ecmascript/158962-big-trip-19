@@ -73,6 +73,7 @@ export default class PointsModel extends Observable {
       const newPoint = this.#adaptToClient(response);
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
+
     } catch(err) {
       throw new Error('Can\'t add point');
     }
@@ -89,15 +90,17 @@ export default class PointsModel extends Observable {
       await this.#pointsApiService.deletePoint(update);
       this.#points = this.#points.filter((point, pointIndex) => pointIndex !== index);
       this._notify(updateType);
+
     } catch(err) {
       throw new Error('Can\'t delete point');
     }
   }
 
   #adaptToClient(point) {
-    const adaptedPoint = {...point,
-      dateFrom: point['date_from'],
-      dateTo: point['date_to'],
+    const adaptedPoint = {
+      ...point,
+      dateFrom: new Date(point['date_from']),
+      dateTo: new Date(point['date_to']),
       price: point['base_price'],
       isFavorite: point['is_favorite'],
     };

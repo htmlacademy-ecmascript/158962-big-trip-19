@@ -92,7 +92,6 @@ export default class TripItemView extends AbstractView {
   }
 
   get template() {
-    //console.log(this.#offers)
     return createTripItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 

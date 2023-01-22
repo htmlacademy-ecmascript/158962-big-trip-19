@@ -47,4 +47,7 @@ function handleNewPointButtonClick() {
 
 filterPresenter.init();
 tripPointsPresenter.init();
-pointsModel.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripInfoContainer, RenderPosition.BEFOREEND);
+  });
