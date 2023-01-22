@@ -5,6 +5,10 @@ const MINUTES_PER_DAY = 1440;
 const MAX_LENGTH_FOR_RENDER = 3;
 const AUTHORIZATION = 'Basic hS2sfS44wcl1sa2j';
 const END_POINT = 'https://19.ecmascript.pages.academy/big-trip';
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -70,5 +74,6 @@ export {
   UserAction,
   AUTHORIZATION,
   END_POINT,
+  TimeLimit
 };
 
