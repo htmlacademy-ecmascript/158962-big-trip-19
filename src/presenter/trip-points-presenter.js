@@ -1,7 +1,7 @@
 import TripEventList from '../view/trip-event-list';
 import EmptyPointView from '../view/empty-point-view';
 import { render, RenderPosition, remove } from '../framework/render.js';
-import { SortType, FilterType, UpdateType, UserAction, POINTS_COUNT, TimeLimit } from '../const';
+import { SortType, FilterType, UpdateType, UserAction, TimeLimit } from '../const';
 import { filterGroup } from '../utils/filter.js';
 import { sortByPrice, sortByDay , sortByDuration, } from '../utils/sort.js';
 import SortListView from '../view/sort-list-view';
@@ -23,7 +23,6 @@ export default class TripPointsPresenter {
   #sortComponent = null;
   #currentSortType = SortType.DAY.value;
   #filterType = FilterType.EVERYTHING;
-  #renderedPointCount = POINTS_COUNT;
   #loadingComponent = new LoadingView();
   #isLoading = true;
   #uiBlocker = new UiBlocker({
@@ -104,7 +103,7 @@ export default class TripPointsPresenter {
     }
 
     this.#renderSort();
-    this.#renderPoints(points.slice(0, Math.min(pointCount, this.#renderedPointCount)));
+    this.#renderPoints(points);
   }
 
   #renderLoading() {
@@ -169,7 +168,7 @@ export default class TripPointsPresenter {
         this.#renderTripBoard();
         break;
       case UpdateType.MAJOR:
-        this.#clearPointsList({resetRenderedPointCount: true, resetSortType: true});
+        this.#clearPointsList({resetSortType: true});
         this.#renderTripBoard();
         break;
       case UpdateType.INIT:
@@ -188,7 +187,7 @@ export default class TripPointsPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearPointsList({resetRenderedPointCount: true});
+    this.#clearPointsList();
     this.#renderTripBoard();
   };
 
@@ -210,8 +209,8 @@ export default class TripPointsPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
-  #clearPointsList({resetRenderedPointCount = false, resetSortType = false} = {}) {
-    const pointCount = this.points.length;
+  #clearPointsList({resetSortType = false} = {}) {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
@@ -220,12 +219,6 @@ export default class TripPointsPresenter {
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
-    }
-
-    if (resetRenderedPointCount) {
-      this.#renderedPointCount = POINTS_COUNT;
-    } else {
-      this.#renderedPointCount = Math.min(pointCount, this.#renderedPointCount);
     }
 
     if (resetSortType) {
