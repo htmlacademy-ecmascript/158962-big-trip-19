@@ -56,9 +56,8 @@ export default class TripRoutePresenter {
 
   #createRouteTitle = () => {
     const sortedData = sortByDay([...this.#pointsModel.points]);
-    const destinationNames = this.#pointsModel.destinations
-      .filter((destination) => sortedData
-        .some((point) => destination.id === point.destination))
+    const destinationNames = sortedData.map((point) => this.#pointsModel.destinations
+      .find((destination) => destination.id === point.destination))
       .map((destinationById) => destinationById.name);
 
     if (destinationNames.length === 0) {

@@ -1,4 +1,3 @@
-const POINTS_COUNT = 5;
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const MINUTES_PER_HOUR = 60;
 const MINUTES_PER_DAY = 1440;
@@ -62,7 +61,6 @@ const UpdateType = {
 
 
 export {
-  POINTS_COUNT,
   TYPES,
   TEXTS_FOR_EMPTY_SHEET,
   MINUTES_PER_DAY,
