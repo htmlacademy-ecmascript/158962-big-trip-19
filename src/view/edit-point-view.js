@@ -4,7 +4,6 @@ import { capitalizeFirstLetter } from '../utils/common';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import dayjs from 'dayjs';
 import he from 'he';
 
 const NEW_TRIP_POINT = {
@@ -12,8 +11,6 @@ const NEW_TRIP_POINT = {
   destination: null,
   isFavorite: false,
   price: '',
-  dateFrom: dayjs().toString(),
-  dateTo: dayjs().toString(),
   offers: [],
 };
 
@@ -103,7 +100,7 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
   const destination = getDescriptionByDestinationId(pointDestinations, point);
   const offersTemplate = createOffersTemplate(offersByType, pointOffers, id);
   const destinationsTemplate = createDestinationTemplate(pointDestinations, destination?.description, destination?.pictures, destination?.name);
-  const isSubmitDisabled = price === '' || price === 0;
+  const isSubmitDisabled = price === '' || price === 0 || destination?.name === null || destination?.name === '';
 
   const createCloseFormButton = () => {
     if (!isPointEdit) {
@@ -156,14 +153,14 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
         </div>
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time">From</label>
+          <label class="visually-hidden" for="event-start-time-1">From</label>
           <input class="event__input  event__input--time"
                  id="event-start-time-1"
                  type="text"
                  name="event-start-time-1"
                  value="${he.encode(tripDateFrom)}">
           &mdash;
-          <label class="visually-hidden" for="event-end-time">To</label>
+          <label class="visually-hidden" for="event-end-time-1">To</label>
           <input class="event__input  event__input--time"
                  id="event-end-time-1"
                  type="text"
@@ -192,7 +189,8 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
                 </button>
         <button class="event__reset-btn"
                 ${isDisabled ? 'disabled' : ''}
-                type="reset">${resetButtonText}</button>
+                type="reset">${resetButtonText}
+                </button>
         ${createCloseFormButton()}
       </header>
       <section class="event__details">
@@ -216,7 +214,11 @@ export default class EditPointView extends AbstractStatefulView {
   #isPointEdit = null;
   #handleEditPointNewSubmit = null;
 
-  constructor({ point = NEW_TRIP_POINT, offers, destinations, onFormSubmit, onFormNewPointSubmit, onClick, onDeleteClick, isPointEdit }) {
+  constructor({ point = {
+    ...NEW_TRIP_POINT,
+    dateFrom: new Date(),
+    dateTo: new Date(),
+  }, offers, destinations, onFormSubmit, onFormNewPointSubmit, onClick, onDeleteClick, isPointEdit }) {
     super();
     this._setState(EditPointView.parsePointToState(point));
     this.#point = point;
@@ -272,6 +274,7 @@ export default class EditPointView extends AbstractStatefulView {
     if (this._state.price === '') {
       return;
     }
+
     this.#handleEditFormSubmit?.(EditPointView.parseStateToPoint(this._state));
   };
 
@@ -280,6 +283,7 @@ export default class EditPointView extends AbstractStatefulView {
     if (this._state.destination === null || this._state.price === '') {
       return;
     }
+
     this.#handleEditPointNewSubmit?.(EditPointView.parseStateToPoint(this._state));
   };
 
@@ -349,6 +353,7 @@ export default class EditPointView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
+        maxDate: this._state.dateTo,
         defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler,
         time24hr: true
