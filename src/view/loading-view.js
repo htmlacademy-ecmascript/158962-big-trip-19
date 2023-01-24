@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createNoPointTemplate() {
+function createLoadingTemplate() {
   return (
-    `<p class="board__no-points">
+    `<p class="trip-events__msg">
       Loading...
     </p>`
   );
@@ -10,6 +10,6 @@ function createNoPointTemplate() {
 
 export default class LoadingView extends AbstractView {
   get template() {
-    return createNoPointTemplate();
+    return createLoadingTemplate();
   }
 }

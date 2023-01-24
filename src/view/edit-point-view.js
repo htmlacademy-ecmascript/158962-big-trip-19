@@ -5,6 +5,7 @@ import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
+import he from 'he';
 
 const NEW_TRIP_POINT = {
   type: TYPES[0],
@@ -32,14 +33,14 @@ const createOffersTemplate = (offers, pointOffers, pointId) => {
       return (
         `<div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden"
-               id="event-offer-${pointId}-${offerId}"
+               id="event-offer-${he.encode(String(pointId))}-${he.encode(String(offerId))}"
                type="checkbox"
-               data-offer-id="${offerId}"
-               name="event-offer-${pointId}" ${checkedOffer}>
-          <label class="event__offer-label" for="event-offer-${pointId}-${offerId}">
-            <span class="event__offer-title">${availableOfferTitle}</span>
+               data-offer-id="${he.encode(String(offerId))}"
+               name="event-offer-${he.encode(String(pointId))}" ${checkedOffer}>
+          <label class="event__offer-label" for="event-offer-${he.encode(String(pointId))}-${he.encode(String(offerId))}">
+            <span class="event__offer-title">${he.encode(availableOfferTitle)}</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">${availableOfferPrice}</span>
+            <span class="event__offer-price">${he.encode(String(availableOfferPrice))}</span>
           </label>
         </div>`);
     }).join('')}
@@ -56,11 +57,11 @@ const createDestinationTemplate = (pointDestinations, description, pictures, nam
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description}</p>
+      <p class="event__destination-description">${he.encode(description)}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${pictures?.map(({ src }) => `<img class="event__photo" src="${src}" alt="Photo of ${name}">`).join('')}
+          ${pictures?.map(({ src }) => `<img class="event__photo" src="${he.encode(src)}" alt="Photo of ${he.encode(name)}">`).join('')}
         </div>
       </div>
     </section>
@@ -72,7 +73,7 @@ const createDestinationOptionsTemplate = (options) => {
     return '';
   }
 
-  return options.map((option) => `<option value=${option.name}></option>`).join('');
+  return options.map((option) => `<option value=${he.encode(option.name)}></option>`).join('');
 };
 
 const createEventTypeListTemplate = (types, currentType, pointId) => types.map((type) => {
@@ -88,7 +89,7 @@ const createEventTypeListTemplate = (types, currentType, pointId) => types.map((
              data-event-type="true"
              value="${type}"
              ${checked}>
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${pointId}">${eventType}</label>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${pointId}">${he.encode(eventType)}</label>
     </div>`);
 }).join('');
 
@@ -120,16 +121,16 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
       <form class="event event--edit ${editPointElementClass}" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <label class="event__type  event__type-btn" for="event-type-toggle-${he.encode(String(id))}">
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon"
                  width="17"
                  height="17"
-                 src="img/icons/${type}.png"
-                 alt="Event type icon">
+                 src="img/icons/${he.encode(type)}.png"
+                 alt="Event ${he.encode(type)} icon">
           </label>
           <input class="event__type-toggle  visually-hidden"
-                 id="event-type-toggle-1"
+                 id="event-type-toggle-${he.encode(String(id))}"
                  type="checkbox">
 
           <div class="event__type-list">
@@ -141,47 +142,47 @@ const createEditPointTemplate = (point, offers, pointDestinations, isPointEdit) 
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1"> ${type}</label>
+          <label class="event__label  event__type-output" for="event-destination-${he.encode(String(id))}"> ${he.encode(type)}</label>
           <input class="event__input  event__input--destination"
-                 id="event-destination-1"
+                 id="event-destination-${he.encode(String(id))}"
                  type="text"
                  name="event-destination"
-                 value="${destination?.name || ''}"
+                 value="${he.encode(destination?.name || '')}"
 
-                 list="destination-list-1">
-          <datalist id="destination-list-1">
+                 list="destination-list-${he.encode(String(id))}">
+          <datalist id="destination-list-${he.encode(String(id))}">
            ${createDestinationOptionsTemplate(pointDestinations)}
           </datalist>
         </div>
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-1">From</label>
+          <label class="visually-hidden" for="event-start-time">From</label>
           <input class="event__input  event__input--time"
                  id="event-start-time-1"
                  type="text"
-                 name="event-start-time"
-                 value="${tripDateFrom}">
+                 name="event-start-time-1"
+                 value="${he.encode(tripDateFrom)}">
           &mdash;
-          <label class="visually-hidden" for="event-end-time-1">To</label>
+          <label class="visually-hidden" for="event-end-time">To</label>
           <input class="event__input  event__input--time"
                  id="event-end-time-1"
                  type="text"
-                 name="event-end-time"
-                 value="${tripDateTo}">
+                 name="event-end-time-1"
+                 value="${he.encode(tripDateTo)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
+          <label class="event__label" for="event-price-${he.encode(String(id))}">
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
           <input class="event__input  event__input--price"
-                 id="event-price-1"
+                 id="event-price-${he.encode(String(id))}"
                  type="number"
                  min="1"
                  step="1"
                  name="event-price"
-                 value="${price}">
+                 value="${he.encode(String(price))}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue"

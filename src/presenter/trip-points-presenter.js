@@ -9,6 +9,7 @@ import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
 import TripRoutePresenter from './trip-route-presenter';
 import LoadingView from '../view/loading-view.js';
+import ErrorLoadingView from '../view/error-loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class TripPointsPresenter {
@@ -24,7 +25,9 @@ export default class TripPointsPresenter {
   #currentSortType = SortType.DAY.value;
   #filterType = FilterType.EVERYTHING;
   #loadingComponent = new LoadingView();
+  #errorLoadingComponent = new ErrorLoadingView();
   #isLoading = true;
+  #isErrorLoading = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -88,7 +91,10 @@ export default class TripPointsPresenter {
 
   #renderTripBoard() {
     render(this.#tripList, this.#eventContainer);
-
+    if (this.#isErrorLoading) {
+      this.#renderErrorLoading();
+      return;
+    }
     if (this.#isLoading) {
       this.#renderLoading();
       return;
@@ -107,7 +113,11 @@ export default class TripPointsPresenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#eventContainer, RenderPosition.AFTERBEGIN);
+    render(this.#loadingComponent, this.#eventContainer);
+  }
+
+  #renderErrorLoading() {
+    render(this.#errorLoadingComponent, this.#eventContainer);
   }
 
   #renderPoints(tripPoints) {
@@ -176,6 +186,11 @@ export default class TripPointsPresenter {
         remove(this.#loadingComponent);
         this.#renderTripBoard();
         break;
+      case UpdateType.LOADING_ERROR:
+        this.#isErrorLoading = true;
+        remove(this.#loadingComponent);
+        this.#renderTripBoard();
+        break;
       default:
         throw new Error(`Unknown order state: '${updateType}'!`);
     }
@@ -216,6 +231,7 @@ export default class TripPointsPresenter {
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
+    remove(this.#errorLoadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);

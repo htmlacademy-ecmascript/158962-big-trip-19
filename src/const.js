@@ -57,6 +57,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  LOADING_ERROR: 'LOADING_ERROR',
 };
 
 

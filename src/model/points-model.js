@@ -36,9 +36,8 @@ export default class PointsModel extends Observable {
       this.#offers = offers;
       this.#destinations = destinations;
     } catch(err) {
-      this.#points = [];
-      this.#offers = [];
-      this.#destinations = [];
+      this._notify(UpdateType.LOADING_ERROR);
+      throw new Error('Error loading data from server');
     }
 
     this._notify(UpdateType.INIT);
